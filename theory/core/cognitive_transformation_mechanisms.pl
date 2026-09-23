@@ -17,14 +17,18 @@ claim(transformation_composes_along_uptake, required,
         transformation(S, In, Mid), component_of(Y, S),
         takes_up(Y, Mid), transformation(Y, Mid, Out))).
 
-% A transformation is cognitive when something takes its output up and
-% transforms it in turn. Being cognitive is a relation to a taker, not a
-% property of the transformation; a taker that only records is not one.
-% The taker may be the same component at a later time: the self is divided
-% along time, so X = Y is allowed on purpose (issue #9).
-claim(cognitive_when_taken_up_and_transformed, required,
+% A transformation is cognitive when a component of a directed system takes
+% its output up and transforms it in turn: its uptake reaches a working that
+% a criterion directs (issue #16). Being cognitive is a relation to a taker,
+% not a property of the transformation; a taker that only records is not
+% one, and neither is a taker that nothing directs. The transforming side
+% belongs to no system in particular; the taker does. The taker may be the
+% same component at a later time: the self is divided along time, so X = Y
+% is allowed on purpose (issue #9).
+claim(cognitive_when_taken_up_into_a_directed_working, required,
     (cognitive_transformation(X, In, Out) :-
-        transformation(X, In, Out), takes_up(Y, Out), transformation(Y, Out, _))).
+        transformation(X, In, Out), takes_up(Y, Out), transformation(Y, Out, _),
+        component_of(Y, S), directed_by(S, _))).
 
 % A mechanism is whatever performs a cognitive transformation. It needs no
 % system to belong to, and nothing is said about its own intelligence.
@@ -32,15 +36,21 @@ claim(mechanism_when_it_transforms_cognitively, required,
     (mechanism(X) :- cognitive_transformation(X, _, _))).
 
 % The boundary-relative role: a component serves as a mechanism in a system
-% when another component of that system takes its output up and transforms
-% it. The taker must transform here too, so an organised system is exactly
-% one that transforms something as a system (the composition base).
-claim(mechanism_when_its_output_is_consumed, required,
+% when another component of that directed system takes its output up and
+% transforms it. The taker must transform here too, so a system with a
+% mechanism in it transforms something as a system (the composition base);
+% the direction is what makes that system cognitive rather than merely
+% organised.
+claim(mechanism_when_its_output_is_taken_up_in_a_directed_system, required,
     (mechanism_in(X, S) :-
         component_of(X, S), transformation(X, _, Out),
-        component_of(Y, S), takes_up(Y, Out), transformation(Y, Out, _))).
+        component_of(Y, S), takes_up(Y, Out), transformation(Y, Out, _),
+        directed_by(S, _))).
 
-% Organisation alone makes a cognitive system: no criterion, no recurrence.
+% A system with a mechanism in it is a cognitive system. Since serving as a
+% mechanism needs the system directed, organisation alone does not make
+% one: a system that merely transforms as a system is not cognitive.
+% No recurrence is required.
 claim(whole_when_it_has_a_mechanism, required,
     (cognitive_system(S) :- mechanism_in(_, S))).
 
@@ -55,8 +65,9 @@ claim(directed_when_evaluator_returns, required,
         under_criterion(S, T), evaluator_of(E, T), transformation(S, _, Out),
         takes_up(E, Out), returns_to(E, X), component_of(X, S))).
 
-% Intelligence is the working of an organised system under a criterion that
-% directs it, not a capacity the system owns and not a label.
+% Intelligence is the working of a cognitive system under the criterion
+% that directs it, not a capacity the system owns and not a label. The
+% cognitive system Claim says some criterion directs it; this one names it.
 claim(intelligence_when_organised_and_directed, required,
     (realises_intelligence(S, T) :- cognitive_system(S), directed_by(S, T))).
 
@@ -100,5 +111,5 @@ template(cognitive_system(S), [S, is, an, organised, cognitive, system]).
 template(realises_intelligence(S, T), [S, realises, intelligence, under, the, criterion, T]).
 template(shared_in(R, S), [R, is, a, coupling, surface, within, S]).
 template(nested_in(X, S), [X, is, nested, in, S]).
-template(recurrent_system(S), [S, is, a, recurrent, cognitive, system]).
+template(recurrent_system(S), [S, is, a, recurrent, system]).
 template(can_revise(S), [S, can, revise, through, recurrence]).

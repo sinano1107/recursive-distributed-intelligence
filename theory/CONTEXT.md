@@ -19,7 +19,7 @@ Each term names its Core vocabulary item; the Observation vocabulary a Phenomeno
 ### Cognitive transformation mechanisms
 
 **Transformation** (`transformation/3`; Observation `transforms/3` for a stated one, `turns/3` for a derived one):
-One representation or state turned into another by some component. Not every transformation is cognitive. A system transforms what its components transform and what a chain of them transforms along uptake, so a system's transformation at a larger boundary is derived from its organisation, never stated.
+One representation or state turned into another by some component. Not every transformation is cognitive. A system transforms what a chain of its components transforms along uptake, and nothing that one component transforms alone, so a system's transformation is its integration and is derived from its organisation, never stated.
 _Avoid_: computation, processing step
 
 **Cognitive transformation** (`cognitive_transformation/3`):

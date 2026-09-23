@@ -144,7 +144,7 @@ phenomenon(painting_as_coupling_surface,
 % boundary and, by composition, a mechanism nested in a larger one. No fact
 % states that the pipeline transforms; the chain derives it.
 phenomenon(pipeline_as_mechanism_in_a_larger_system,
-    [transformation_of_component_is_of_system, transformation_composes_along_uptake,
+    [transformation_when_components_chain, transformation_composes_along_uptake,
      nested_when_whole_is_mechanism, intelligence_when_organised_and_directed],
     [belongs(decoder, pipeline), belongs(checksum, pipeline),
      transforms(decoder, file, pixels), consumes(checksum, pixels), transforms(checksum, pixels, digest),
@@ -206,3 +206,10 @@ phenomenon(author_rereads_own_draft,
     [belongs(author, writing), transforms(author, thoughts, draft),
      consumes(author, draft), transforms(author, draft, revision), feeds_back(author, author)],
     [expect(is_mechanism(author)), expect(cognitive_whole(writing)), expect(recurrent(writing))]).
+
+% E14: a system transforms what its chain transforms and nothing that one
+% component transforms alone; the system's transformation is the integration.
+phenomenon(system_transforms_only_what_its_chain_transforms,
+    [transformation_when_components_chain],
+    [belongs(a, box), belongs(b, box), transforms(a, x, y), consumes(b, y), transforms(b, y, z)],
+    [expect(turns(box, x, z)), refuse(turns(box, x, y)), refuse(turns(box, y, z))]).

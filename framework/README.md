@@ -51,8 +51,8 @@ Files are read as terms, not consulted.
 
 - `Clause` is `Head` or `(Head :- Body)`; parenthesise a conjunctive body.
   Bodies are conjunctions of goals; every goal must resolve (see load
-  errors), which rules out built-ins and negation. Every head variable must
-  occur in the body.
+  errors), which rules out built-ins and negation. Every head variable
+  should occur in the body (not checked).
 - `Status` is `required`, `provisional` or `untested`.
 - `DependsOn` lists the Claims the Phenomenon is written to test. A name
   that is not yet in the Core counts as `required` (red before green).

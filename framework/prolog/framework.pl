@@ -169,7 +169,7 @@ outcome(_, explains).
 
 % ---- Derivation: bottom-up closure of Core + Bridge rules over the Facts --
 %
-% closure(Facts, Closure): Closure holds d(Atom, Trace, Items) for every
+% closure(Facts, Closure, Completeness): Closure holds d(Atom, Trace, Items) for every
 % ground atom derivable from the Facts: one Derivation trace (the first
 % found, nested; flatten/2 gives the step list) and the set of every Claim,
 % Bridge rule and vocabulary item that occurs in any derivation of it.
@@ -270,9 +270,8 @@ merge(d(Head, Trace, Items), C0-Changed0, C-Changed) :-
 % Headings are ignored; the rest is split into sentences: . ! or ? ends
 % one only at the end of the text or before whitespace and a character
 % that is not a lowercase letter, so "e.g. a gear" stays in its sentence.
-% A sentence is substantive
-% when it contains a letter. Meaning is never checked, only that each
-% substantive sentence cites at least one Claim that exists in the Core.
+% A sentence is substantive when it contains a letter. Meaning is never
+% checked, only that each substantive sentence cites a Claim in the Core.
 
 cites_core(ProseFile) :-
     file_directory_name(ProseFile, ProseDir),

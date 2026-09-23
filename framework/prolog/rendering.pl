@@ -59,7 +59,7 @@ argument_word(A, _) :- domain_error(template_argument, A).
 % Words the Template language keeps for itself.
 reserved_word(if).
 reserved_word(and).
-reserved_word(W) :- atom(W), var_name(_, W).
+reserved_word(W) :- var_name(_, W).
 
 var_name(N, W) :- integer(N), !, C is 0'A + N, char_code(W, C).
 var_name(N, W) :- atom(W), atom_length(W, 1), char_code(W, C),

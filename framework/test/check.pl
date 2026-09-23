@@ -86,4 +86,24 @@ test(phenomenon_fact_read_by_no_bridge_rule_is_a_load_error,
     fixture(unresolved_phenomenon_fact, Dir),
     check(Dir, _).
 
+test(two_templates_with_the_same_word_pattern_are_a_load_error,
+     throws(theory_error(ambiguous_templates(adores/2, likes/2)))) :-
+    fixture(ambiguous_templates, Dir),
+    check(Dir, _).
+
+test(template_word_that_is_reserved_by_the_template_language_is_a_load_error,
+     throws(theory_error(reserved_word(and, sibling/2)))) :-
+    fixture(reserved_template_word, Dir),
+    check(Dir, _).
+
+test(core_vocabulary_item_without_a_template_is_a_load_error,
+     throws(theory_error(missing_template(part_of/2)))) :-
+    fixture(missing_template, Dir),
+    check(Dir, _).
+
+test(core_vocabulary_item_with_two_templates_is_a_load_error,
+     throws(theory_error(duplicate_template(contains/2)))) :-
+    fixture(duplicate_template, Dir),
+    check(Dir, _).
+
 :- end_tests(check).

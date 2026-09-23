@@ -1,4 +1,4 @@
-:- module(rendering, [render/2, parse/2, template/2]).
+:- module(rendering, [render/2, parse/2, template/2, reserved_word/1]).
 
 % Rendering: a Claim (Head :- Body) or a Core term becomes one English
 % sentence built from one Template per Core vocabulary item. parse/2 is
@@ -44,6 +44,11 @@ words([W|Ws]) --> [W], words(Ws).
 
 argument('$VAR'(N)) --> [W], { var_name(N, W) }.
 argument(A) --> [A], { atom(A), \+ var_name(_, A) }.
+
+% Words the Template language keeps for itself.
+reserved_word(if).
+reserved_word(and).
+reserved_word(W) :- atom(W), var_name(_, W).
 
 var_name(N, W) :- integer(N), !, C is 0'A + N, char_code(W, C).
 var_name(N, W) :- atom(W), atom_length(W, 1), char_code(W, C),

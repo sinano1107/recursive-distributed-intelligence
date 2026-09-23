@@ -13,7 +13,8 @@ load_theory(Dir) :-
     forall(theory_term(Dir, core, T, _), store_core(T)),
     forall(theory_term(Dir, bridge, T, _), store_bridge(T)),
     forall(theory_term(Dir, phenomena, T, File), store_phenomenon(T, File)),
-    validate_connectivity.
+    validate_connectivity,
+    validate_templates.
 
 % Each directory accepts only its own kinds of term.
 allowed(core, claim). allowed(core, template). allowed(bridge, bridge).
@@ -78,6 +79,22 @@ validate_connectivity :-
            unresolved(G, bridge(Name))),
     forall(( phenomenon(Name, _, Facts, _), member(F, Facts), \+ read_by_bridge(F) ),
            unresolved(F, phenomenon(Name))).
+
+% Templates: no reserved word, no two Templates with the same word pattern,
+% and exactly one Template per Core vocabulary item.
+validate_templates :-
+    forall(( template(Head, Words), member(W, Words), nonvar(W), reserved_word(W) ),
+           ( goal_functor(Head, FA), throw(theory_error(reserved_word(W, FA))) )),
+    findall(FA-Shape, ( template(Head, Words), goal_functor(Head, FA),
+                        copy_term(Words, Shape), term_variables(Shape, Vs),
+                        maplist(=(slot), Vs) ), Shapes),
+    forall(( member(FA1-S1, Shapes), member(FA2-S2, Shapes), FA1 @< FA2, S1 == S2 ),
+           throw(theory_error(ambiguous_templates(FA1, FA2)))),
+    forall(( setof(FA, core_vocabulary(FA), FAs), member(F/A, FAs),
+             aggregate_all(count, ( template(Head, _), functor(Head, F, A) ), N),
+             N \== 1 ),
+           ( N == 0 -> throw(theory_error(missing_template(F/A)))
+           ; throw(theory_error(duplicate_template(F/A))) )).
 
 unresolved(Goal, Where) :-
     goal_functor(Goal, FA),

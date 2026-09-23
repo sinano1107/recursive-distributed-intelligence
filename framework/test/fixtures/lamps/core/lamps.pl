@@ -11,3 +11,5 @@ template(plugged(L), [L, is, plugged, in]).
 template(switch(L, P), [the, switch, of, L, is, P]).
 template(lit(L), [L, is, lit]).
 template(dark(L), [L, is, dark]).
+template(in_bright_room(L), [L, is, in, a, bright, room]).
+template(magic(L), [L, is, magic]).

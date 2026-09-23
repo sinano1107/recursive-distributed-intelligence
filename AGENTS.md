@@ -12,6 +12,8 @@ The five canonical triage roles use their default label names (`needs-triage`, `
 
 For a `ready-for-agent` issue use `/implement-rdi <issue>` (not `/implement`). `/implementation-delegation <issue>` picks the model, effort, and review strength first. Test seams are fixed by `docs/adr/0004`.
 
+How the skills chain in this repo, session boundaries, language, and the theory-slice loop: `docs/agents/workflow.md`. Per-machine prerequisites: `docs/agents/machine-setup.md`.
+
 ### Domain docs
 
 Multi-context: `CONTEXT-MAP.md` at the repo root points to `framework/CONTEXT.md` and `theory/CONTEXT.md`. Repo-wide ADRs live in `docs/adr/`, framework-scoped ones in `framework/docs/adr/`. See `docs/agents/domain.md`.

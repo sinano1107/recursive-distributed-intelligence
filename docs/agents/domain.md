@@ -12,7 +12,9 @@ If any of these files don't exist, **proceed silently**. Don't flag their absenc
 
 ## File structure
 
-Single-context repo (most repos):
+This repo is **multi-context** (see `CONTEXT-MAP.md`): `framework/` and `theory/` each have a `CONTEXT.md`; repo-wide ADRs are in `docs/adr/`, framework-scoped ones in `framework/docs/adr/`. The generic layouts follow.
+
+Single-context repo:
 
 ```
 /
@@ -49,3 +51,10 @@ If the concept you need isn't in the glossary yet, that's a signal: either you'r
 If your output contradicts an existing ADR, surface it explicitly rather than silently overriding:
 
 > _Contradicts ADR-0007 (event-sourced orders), but worth reopening because…_
+
+## ADR landing convention (project-local)
+
+- **The ADR carries the decision and its why**: decision, rationale, and (when worth remembering) considered options. Honor the format doc's single-paragraph spirit; an ADR past ~60 lines is a signal that spec material has leaked in.
+- **Measurement belongs to the issue.** Surveys of the current implementation, tables, walk-throughs, and `file:line` references go in the grilling issue, not the ADR; code moves and these go stale silently. In the ADR, cite the issue that holds them.
+- **Existing ADRs are immutable history.** Never retroactively slim, rewrite, or renumber them: ADR numbers are citation addresses used by commits, skills, and other ADRs. Supersede instead.
+- **`CONTEXT.md` is a glossary only.** No implementation detail, no test conventions, no workflow; those go to ADRs or `docs/agents/workflow.md`.

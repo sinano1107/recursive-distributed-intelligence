@@ -16,6 +16,17 @@ The vault's note markers map onto the framework's Status levels:
 
 Each term names its Core vocabulary item; the Observation vocabulary a Phenomenon uses for it is listed where one exists.
 
+### Primitives
+
+Six terms are not defined by any Claim. They enter as facts a Phenomenon states, and the theory takes them as given:
+
+- **Component** (`component_of/2`; Observation `belongs/2`): X lies inside the boundary drawn around S. Boundaries are analytical: whoever describes a Phenomenon draws them, and the same entity can lie inside several.
+- **Transformation** (`transformation/3`; Observation `transforms/3`): defined below only as far as composition; that a component transforms is a primitive.
+- **Uptake** (`takes_up/2`; Observation `consumes/2`): Y takes R as input.
+- **Return** (`returns_to/2`; Observation `feeds_back/2`): Y's output goes back into X.
+- **Task** (`task_criterion/2`; Observation `task/2`) and **Evaluator** (`evaluator_of/2`; Observation `judges_under/2`): a criterion attributed to S, and who judges under it.
+- **Holding** (`retains/2`; Observation `stores/2`): X keeps R available without transforming it. "Passively" is the gloss for the absence of a transformation fact, which the Core cannot state.
+
 ### Cognitive transformation mechanisms
 
 **Transformation** (`transformation/3`; Observation `transforms/3` for a stated one, `turns/3` for a derived one):

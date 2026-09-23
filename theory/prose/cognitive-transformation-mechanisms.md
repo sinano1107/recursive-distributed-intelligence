@@ -28,7 +28,7 @@ Within this theory, intelligence is the working of an organised cognitive system
 
 ## Recurrence
 
-A system is recurrent when the component that takes up a mechanism's output feeds its own output back into that mechanism [[recurrent_when_output_returns]]. Recurrence supports correction, memory, revision, and adaptation; it does not guarantee them, and it is not asserted as a necessary condition for every form of intelligent behaviour [[recurrent_when_output_returns]].
+A system is recurrent when the component that takes up a mechanism's output feeds its own output back into that mechanism [[recurrent_when_output_returns]]. A recurrent system can revise: a mechanism's later transformation acts on the response to its earlier output, so no state at that mechanism is final [[revision_when_recurrent]]. Whether revision happens, corrects, or is affordable is not asserted, and recurrence is not asserted as a necessary condition for every form of intelligent behaviour [[revision_when_recurrent]].
 
 ## Scale relativity and recursive nesting
 

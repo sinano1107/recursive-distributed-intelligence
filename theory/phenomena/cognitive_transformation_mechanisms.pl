@@ -2,7 +2,8 @@
 % Facts: belongs(X, S), transforms(X, In, Out), consumes(Y, Out),
 %        feeds_back(Y, X), task(S, T), stores(X, R).
 % Observations: carries_out(S, T), is_mechanism(X), serves_as_mechanism(X, S),
-%               cognitive_whole(X), shared_state(R, S), nested(X, S), revisable(S).
+%               cognitive_whole(X), shared_state(R, S), nested(X, S), recurrent(S),
+%               revisable(S).
 
 % E1: a team reviews what no member reviews; a person is not the privileged
 % minimum unit.
@@ -53,7 +54,16 @@ phenomenon(critic_in_a_design_loop,
     [belongs(critic, design_loop), belongs(planner, design_loop),
      transforms(critic, proposal, review), consumes(planner, review),
      transforms(planner, review, proposal2), feeds_back(planner, critic)],
-    [expect(serves_as_mechanism(critic, design_loop)), expect(revisable(design_loop))]).
+    [expect(serves_as_mechanism(critic, design_loop)), expect(recurrent(design_loop))]).
+
+% E4b: the provisional claim that recurrence supports revision, tested on
+% its own so that a failure stays pending.
+phenomenon(design_loop_can_revise,
+    [revision_when_recurrent],
+    [belongs(critic, design_loop), belongs(planner, design_loop),
+     transforms(critic, proposal, review), consumes(planner, review),
+     transforms(planner, review, proposal2), feeds_back(planner, critic)],
+    [expect(revisable(design_loop))]).
 
 % R1: identical uncoupled processors; more components are not better.
 phenomenon(uncoupled_processors,

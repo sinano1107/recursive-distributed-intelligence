@@ -13,4 +13,5 @@ bridge(mechanism_from_mechanism_in, (serves_as_mechanism(X, S) :- mechanism_in(X
 bridge(whole_from_cognitive_system, (cognitive_whole(S) :- cognitive_system(S))).
 bridge(shared_state_from_shared_in, (shared_state(R, S) :- shared_in(R, S))).
 bridge(nested_from_nested_in, (nested(X, S) :- nested_in(X, S))).
-bridge(revisable_from_recurrent, (revisable(S) :- recurrent_system(S))).
+bridge(recurrent_from_recurrent_system, (recurrent(S) :- recurrent_system(S))).
+bridge(revisable_from_can_revise, (revisable(S) :- can_revise(S))).

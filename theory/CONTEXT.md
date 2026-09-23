@@ -46,9 +46,13 @@ _Avoid_: goal, objective, utility, reward
 The working of an organised cognitive system under a task criterion supplied to it. Not a capacity the system owns and not a binary property of an entity; the Core states only the two conditions, and the prose keeps the grading and boundary relativity.
 _Avoid_: capability, capacity, ability, IQ, scalar intelligence
 
-**Recurrence** (`recurrent_system/1`; Observation `revisable/1`):
-Temporal re-entry: the component that takes up a mechanism's output feeds its own output back into that mechanism. It supports correction; it does not guarantee it, and it is distinct from recursive nesting.
+**Recurrence** (`recurrent_system/1`; Observation `recurrent/1`):
+Temporal re-entry: the component that takes up a mechanism's output feeds its own output back into that mechanism. Distinct from recursive nesting.
 _Avoid_: recursion, loop
+
+**Revision through recurrence** (`can_revise/1`, provisional; Observation `revisable/1`):
+A recurrent system can revise: a mechanism's later transformation acts on the response to its earlier output, so no state at that mechanism is final. Whether revision happens, corrects, or is affordable is not asserted.
+_Avoid_: self-correction, learning, convergence
 
 **Recursive nesting** (`nested_in/2`; Observation `nested/2`):
 Scale-relative composition: an organised cognitive system at one boundary that serves as a cognitive transformation mechanism at a larger boundary. The same entity can be a system at one scale and a mechanism at another.

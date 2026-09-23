@@ -1,7 +1,8 @@
 % Cognitive transformation mechanisms. Core vocabulary: component_of/2,
 % transformation/3, takes_up/2, returns_to/2, task_criterion/2, retains/2,
 % cognitive_transformation/3, mechanism/1, mechanism_in/2, cognitive_system/1,
-% realises_intelligence/2, shared_in/2, nested_in/2, recurrent_system/1.
+% realises_intelligence/2, shared_in/2, nested_in/2, recurrent_system/1,
+% can_revise/1.
 
 % A transformation is cognitive when something takes its output up and
 % transforms it in turn. Being cognitive is a relation to a taker, not a
@@ -41,12 +42,19 @@ claim(shared_state_when_stored_and_consumed, required,
 claim(nested_when_whole_is_mechanism, required,
     (nested_in(X, S) :- cognitive_system(X), mechanism_in(X, S))).
 
-% Recurrence: the component that takes up a mechanism's output feeds back
-% into that mechanism. It supports correction; it does not guarantee it.
+% Recurrence (temporal re-entry): the component that takes up a mechanism's
+% output feeds back into that mechanism.
 claim(recurrent_when_output_returns, required,
     (recurrent_system(S) :-
         component_of(X, S), cognitive_transformation(X, _, Out),
         takes_up(Y, Out), component_of(Y, S), returns_to(Y, X))).
+
+% Recurrence supports revision: a mechanism's later transformation acts on
+% the response to its earlier output. Provisional: the vault hedges it
+% (recurrence can fail or become costly, and is not a proven necessary
+% condition), and the Claim adds little beyond the loop's existence.
+claim(revision_when_recurrent, provisional,
+    (can_revise(S) :- recurrent_system(S))).
 
 template(component_of(X, S), [X, is, a, component, of, S]).
 template(transformation(X, In, Out), [X, transforms, In, into, Out]).
@@ -61,4 +69,5 @@ template(cognitive_system(S), [S, is, an, organised, cognitive, system]).
 template(realises_intelligence(S, T), [S, realises, intelligence, under, the, task, T]).
 template(shared_in(R, S), [R, is, a, coupling, surface, within, S]).
 template(nested_in(X, S), [X, is, nested, in, S]).
-template(recurrent_system(S), [S, supports, correction, through, recurrence]).
+template(recurrent_system(S), [S, is, a, recurrent, cognitive, system]).
+template(can_revise(S), [S, can, revise, through, recurrence]).

@@ -10,12 +10,20 @@ test(render_then_parse_is_the_identity_over_the_template_language) :-
     parse(English, Parsed),
     Parsed == Claim.
 
-test(round_trip_of_a_claim_with_variables) :-
-    Claim = (dark('$VAR'(0)) :- switch('$VAR'(0), off)),
+test(round_trip_of_a_claim_as_stored_with_unbound_variables) :-
+    Claim = (dark(L) :- switch(L, off)),
     render(Claim, English),
     English == "A is dark if the switch of A is off.",
     parse(English, Parsed),
-    Parsed == Claim.
+    Parsed =@= Claim.
+
+test(argument_that_is_not_one_token_is_an_error,
+     throws(error(domain_error(template_argument, 'big lamp'), _))) :-
+    render(lit('big lamp'), _).
+
+test(number_argument_is_an_error,
+     throws(error(domain_error(template_argument, 7), _))) :-
+    render(lit(7), _).
 
 test(parse_never_accepts_free_prose, fail) :-
     parse("the kitchen lamp is lit because somebody switched it on.", _).

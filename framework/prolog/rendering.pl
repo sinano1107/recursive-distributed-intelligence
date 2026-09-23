@@ -5,16 +5,20 @@
 % the exact inverse over that template language and nothing else.
 %
 % Template language: template(Head, Words) where Words is a list of atoms;
-% variables in Words are argument slots. Arguments are atoms (one token
-% each, never a single capital letter); nested terms are not supported.
-% '$VAR'(N) renders as the capital letter A+N, so numbervars'd Claims
-% round-trip too.  ponytail: 26 variables per Claim; extend var_name/2 if
-% a Claim ever needs more.
+% variables in Words are argument slots. Arguments are atoms of one token
+% (no whitespace, not a reserved word); anything else is a domain_error.
+% Variables render as the capital letters A, B, ... and parse back to fresh
+% variables, so render/parse are inverses up to variable renaming (=@=).
+% ponytail: 26 variables per Claim; extend var_name/2 if one ever needs more.
+
+:- use_module(library(varnumbers)).
 
 :- dynamic template/2.
 
 render(Term, English) :-
-    phrase(sentence(Term), Words), !,
+    copy_term(Term, Numbered),
+    numbervars(Numbered, 0, _),
+    phrase(sentence(Numbered), Words), !,
     atomic_list_concat(Words, ' ', Body),
     string_concat(Body, ".", English).
 
@@ -22,7 +26,8 @@ parse(English, Term) :-
     string_concat(Body, ".", English),
     split_string(Body, " ", "", Strings),
     maplist(atom_string, Words, Strings),
-    phrase(sentence(Term), Words), !.
+    phrase(sentence(Numbered), Words), !,
+    varnumbers(Numbered, Term).
 
 sentence((Head :- Body)) --> term(Head), [if], conjunction(Body).
 sentence(Term) --> term(Term).
@@ -42,8 +47,14 @@ words([]) --> [].
 words([slot(V)|Ws]) --> !, argument(V), words(Ws).
 words([W|Ws]) --> [W], words(Ws).
 
-argument('$VAR'(N)) --> [W], { var_name(N, W) }.
-argument(A) --> [A], { atom(A), \+ var_name(_, A) }.
+argument(A) --> { nonvar(A) }, !, { argument_word(A, W) }, [W].
+argument(A) --> [W], { \+ reserved_word(W) -> A = W ; var_name(N, W), A = '$VAR'(N) }.
+
+argument_word('$VAR'(N), W) :- !, var_name(N, W).
+argument_word(A, A) :-
+    atom(A), A \== '', \+ reserved_word(A),
+    \+ ( atom_codes(A, Codes), member(C, Codes), code_type(C, space) ), !.
+argument_word(A, _) :- domain_error(template_argument, A).
 
 % Words the Template language keeps for itself.
 reserved_word(if).

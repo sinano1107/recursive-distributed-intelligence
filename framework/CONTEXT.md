@@ -19,8 +19,8 @@ Human-readable exposition of the Core. Every substantive sentence in the Prose s
 _Avoid_: documentation, notes, canonical text
 
 **Citation**:
-A reference from the Prose shell to a named Claim. Citations are the only deterministic link between prose and Core.
-_Avoid_: link, reference
+A reference from a sentence of the Prose shell to the Claim the sentence rests on. It says "judge this sentence by that Claim"; it does not say that the Claim entails the sentence, and the framework never checks meaning. Citations are the only deterministic link between prose and Core: a sentence without one cannot be written, and a sentence whose Claim disappears fails the check.
+_Avoid_: link, reference, quotation
 
 **Status**:
 The strictness level attached to a Claim. `required` claims must pass every test that depends on them; `provisional` claims may leave tests pending; `untested` claims are excluded from checking.

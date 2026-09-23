@@ -186,10 +186,10 @@ phenomenon(pipeline_with_a_comparator,
 
 % E12: direction supplied from outside. No member takes the criterion up;
 % an editor judging under it takes the team's revision up and replies to
-% alice. The team's transformation is derived by composition.
+% alice. The team's transformation is derived from the alice-bob chain.
 phenomenon(team_directed_by_an_editor,
     [intelligence_when_organised_and_directed, directed_when_evaluator_returns,
-     transformation_composes_along_uptake],
+     transformation_when_components_chain],
     [belongs(alice, team), belongs(bob, team),
      transforms(alice, draft, critique), consumes(bob, critique),
      transforms(bob, critique, revision), feeds_back(bob, alice),
@@ -213,3 +213,11 @@ phenomenon(system_transforms_only_what_its_chain_transforms,
     [transformation_when_components_chain],
     [belongs(a, box), belongs(b, box), transforms(a, x, y), consumes(b, y), transforms(b, y, z)],
     [expect(turns(box, x, z)), refuse(turns(box, x, y)), refuse(turns(box, y, z))]).
+
+% E15: a chain of three. Only the recursive composition Claim reaches x -> w;
+% the two-component base gives the sub-chains x -> z and y -> w.
+phenomenon(three_step_chain,
+    [transformation_composes_along_uptake],
+    [belongs(a, box), belongs(b, box), belongs(c, box),
+     transforms(a, x, y), consumes(b, y), transforms(b, y, z), consumes(c, z), transforms(c, z, w)],
+    [expect(turns(box, x, w))]).

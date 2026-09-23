@@ -52,13 +52,13 @@ test(bridge_rule_inside_a_phenomenon_file_is_a_load_error,
     check(Dir, _).
 
 test(recursive_claims_terminate_with_exact_refusal_and_exclusion, timeout(10)) :-
-    fixture(nesting, Dir),
+    fixture(containment, Dir),
     check(Dir, Verdicts),
     memberchk(verdict(gear_in_engine_in_car, explains), Verdicts),
     memberchk(verdict(tooth_in_gear_in_engine_in_car, explains), Verdicts),
     memberchk(verdict(car_is_unit, explains), Verdicts),
     memberchk(verdict(gear_holds_nothing, refuses), Verdicts),
-    memberchk(verdict(nesting_without_whole, explains), Verdicts).
+    memberchk(verdict(containment_without_whole, explains), Verdicts).
 
 test(depth_bound_hit_during_a_refusal_or_exclusion_is_a_distinct_failure, timeout(30)) :-
     fixture(non_terminating, Dir),
@@ -121,7 +121,7 @@ test(only_acyclic_derivations_count_for_vacuous_and_exclusion) :-
     memberchk(verdict(reversed_without_sym, violates(claim(sym))), Verdicts).
 
 test(inconsistency_under_a_recursive_claim) :-
-    fixture(nesting, Dir),
+    fixture(containment, Dir),
     check(Dir, Verdicts),
     memberchk(verdict(gear_apart_from_car, inconsistent), Verdicts).
 

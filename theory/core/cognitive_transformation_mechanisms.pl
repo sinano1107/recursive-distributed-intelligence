@@ -32,11 +32,13 @@ claim(mechanism_when_it_transforms_cognitively, required,
     (mechanism(X) :- cognitive_transformation(X, _, _))).
 
 % The boundary-relative role: a component serves as a mechanism in a system
-% when its cognitive transformation is taken up within that system.
+% when another component of that system takes its output up and transforms
+% it. The taker must transform here too, so an organised system is exactly
+% one that transforms something as a system (the composition base).
 claim(mechanism_when_its_output_is_consumed, required,
     (mechanism_in(X, S) :-
-        component_of(X, S), cognitive_transformation(X, _, Out),
-        takes_up(Y, Out), component_of(Y, S))).
+        component_of(X, S), transformation(X, _, Out),
+        component_of(Y, S), takes_up(Y, Out), transformation(Y, Out, _))).
 
 % Organisation alone makes a cognitive system: no task, no recurrence.
 claim(whole_when_it_has_a_mechanism, required,

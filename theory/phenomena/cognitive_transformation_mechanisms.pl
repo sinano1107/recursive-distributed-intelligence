@@ -221,3 +221,13 @@ phenomenon(three_step_chain,
     [belongs(a, box), belongs(b, box), belongs(c, box),
      transforms(a, x, y), consumes(b, y), transforms(b, y, z), consumes(c, z), transforms(c, z, w)],
     [expect(turns(box, x, w))]).
+
+% R9: a system whose internal taker does nothing with what it takes up is
+% not organised, even if someone outside transforms it. Organisation is
+% integration inside the boundary.
+phenomenon(taker_inside_that_does_nothing,
+    [whole_when_it_has_a_mechanism, mechanism_when_its_output_is_consumed,
+     mechanism_when_it_transforms_cognitively],
+    [belongs(x, s), belongs(y, s), transforms(x, a, b), consumes(y, b),
+     consumes(z, b), transforms(z, b, c)],
+    [expect(is_mechanism(x)), refuse(serves_as_mechanism(x, s)), refuse(cognitive_whole(s))]).

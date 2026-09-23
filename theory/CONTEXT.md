@@ -27,7 +27,7 @@ A transformation whose output another component takes up and transforms in turn.
 _Avoid_: compression, useful transformation, intrinsic property
 
 **Cognitive transformation mechanism** (`mechanism/1`; Observation `is_mechanism/1`):
-Whatever performs a cognitive transformation. It needs no system to belong to and is silent about its own intelligence. It serves as a mechanism in a particular system (`mechanism_in/2`; Observation `serves_as_mechanism/2`) when it is a component of that system and its cognitive transformation is taken up within it: that is the boundary-relative role.
+Whatever performs a cognitive transformation. It needs no system to belong to and is silent about its own intelligence. It serves as a mechanism in a particular system (`mechanism_in/2`; Observation `serves_as_mechanism/2`) when another component of that system takes its output up and transforms it: that is the boundary-relative role, and a taker inside the boundary that does nothing with the output does not confer it.
 _Avoid_: agent, processor, node, sub-intelligence
 
 **Coupling surface** (`shared_in/2`; Observation `shared_state/2`):

@@ -2,9 +2,9 @@ name: framework
 
 on:
   push:
-    paths: ['framework/**', '.github/workflows/framework.yml']
+    paths: ['framework/**', 'theory/**', '.github/workflows/framework.yml']
   pull_request:
-    paths: ['framework/**', '.github/workflows/framework.yml']
+    paths: ['framework/**', 'theory/**', '.github/workflows/framework.yml']
 
 jobs:
   plunit:
@@ -16,4 +16,4 @@ jobs:
           sudo apt-add-repository -y ppa:swi-prolog/stable
           sudo apt-get update
           sudo apt-get install -y swi-prolog-nox
-      - run: swipl -g run_tests -t halt framework/test/*.pl
+      - run: swipl -g run_tests -t halt framework/test/*.pl theory/test/*.pl

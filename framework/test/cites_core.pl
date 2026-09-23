@@ -20,7 +20,7 @@ test(citation_of_a_claim_not_in_the_core_fails, fail) :-
     cites_core(File).
 
 test(abbreviation_before_a_lowercase_word_is_not_a_sentence_boundary) :-
-    prose(nesting, 'nest.md', File),
+    prose(containment, 'contain.md', File),
     cites_core(File).
 
 :- end_tests(cites_core).

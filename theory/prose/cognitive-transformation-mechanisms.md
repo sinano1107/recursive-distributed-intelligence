@@ -1,0 +1,43 @@
+# Cognitive transformation mechanisms
+
+The foundational vocabulary of the recursive distributed-intelligence theory: the local building blocks from which intelligent behaviour can emerge across scales, with `intelligence` reserved for the system level [[intelligence_when_organised_and_directed]].
+
+## Why this vocabulary exists
+
+If every component that contributes to cognition were already called intelligent, the theory would be circular: intelligence would emerge from smaller intelligences [[mechanism_when_it_transforms_cognitively]]. Instead, intelligence can emerge from the organised interaction of local transformation mechanisms that do not themselves need to possess the same kind of intelligence as the larger system [[whole_when_it_has_a_mechanism]].
+
+## Cognitive transformation
+
+A transformation is cognitive when a component, possibly the same one at a later time, takes its output up and transforms it in turn [[cognitive_when_taken_up_and_transformed]]. Being cognitive is therefore a relation to a taker, not a property of the transformation itself: a transformation whose output nothing takes up is not cognitive, however much information it processes, and the same transformation becomes cognitive once something takes it up [[cognitive_when_taken_up_and_transformed]]. A taker that only records the output does not make it cognitive; the taker must transform it [[cognitive_when_taken_up_and_transformed]]. Whether the transformation compresses, expands, criticises, retrieves, translates, predicts, or reorganises its input does not matter [[cognitive_when_taken_up_and_transformed]]. Nor need it succeed: a wrong proposal that a critic takes up and rejects is still a cognitive transformation [[cognitive_when_taken_up_and_transformed]]. The taker may lie outside any named system, including the world that an action changes, and it may take the output up at any later time: a paper read a century after it was written was a cognitive transformation, and one that only an archive ever holds was not [[cognitive_when_taken_up_and_transformed]]. The taker may be the same component at a later time, because the self is divided along time: an author who re-reads and reworks their own draft performs a cognitive transformation, and the solitary writing is a recurrent cognitive system [[cognitive_when_taken_up_and_transformed]].
+
+## Cognitive transformation mechanism
+
+A cognitive transformation mechanism is whatever performs a cognitive transformation [[mechanism_when_it_transforms_cognitively]]. It need not belong to any system: a translator whose translation a client takes up and answers is a mechanism, with no system named [[mechanism_when_it_transforms_cognitively]]. It serves as a mechanism in a particular system when a component of that system takes its output up and transforms it; this is the boundary-relative role, and a taker inside the boundary that does nothing with the output does not confer it [[mechanism_when_its_output_is_consumed]]. Depending on the scale of analysis, a mechanism may be a specialised human cognitive process, a person, an LLM, a retrieval system, a critic or verifier, a memory system that transforms usable state, a software tool, or a team performing one transformation inside a larger workflow [[mechanism_when_it_transforms_cognitively]].
+
+## States and representations are coupling surfaces
+
+A passive repository, communication channel, or resource is not a cognitive transformation mechanism merely because a cognitive system uses it [[shared_state_when_stored_and_consumed]]. A state that one component passively holds and another component takes up is a coupling surface within the system: the surface through which local transformations become reusable [[shared_state_when_stored_and_consumed]]. Language, diagrams, symbols, embeddings, documents, code, APIs, task state, shared memory, physical signals, and institutional procedures can all serve as coupling surfaces [[shared_state_when_stored_and_consumed]]. A work that an archive holds and a later viewer takes up is a coupling surface across time, not a mechanism [[shared_state_when_stored_and_consumed]].
+
+## Organised cognitive system
+
+A system is an organised cognitive system when at least one of its components serves as a cognitive transformation mechanism within it, that is, when the components' transformations are taken up by one another [[whole_when_it_has_a_mechanism]]. Organisation alone makes a cognitive system; neither a criterion nor recurrence is required for that [[whole_when_it_has_a_mechanism]]. Many identical processors that never take up one another's output do not form one [[whole_when_it_has_a_mechanism]].
+
+## Direction
+
+A criterion directs a system only when it enters the working; a criterion that is merely attributed to a system directs nothing [[directed_when_component_takes_up_criterion]]. It enters from inside when a component of the system takes the criterion up, as a comparator takes up the integrity criterion or a reviewer takes up the brief [[directed_when_component_takes_up_criterion]]. It enters from outside when an evaluator judging under the criterion takes the system's output up and its response returns into the system, as an editor's notes return to the author [[directed_when_evaluator_returns]]. Direction can thus be supplied by the task, the environment, or an evaluator [[directed_when_evaluator_returns]].
+
+## Intelligence
+
+Within this theory, intelligence is the working of an organised cognitive system under a criterion that directs it, not a quantity the system owns [[intelligence_when_organised_and_directed]]. An organised system that no criterion directs does not realise intelligence, whether no criterion is attributed to it or one merely is; neither does a collection of uncoupled components that has been given one [[intelligence_when_organised_and_directed]]. A feed-forward pipeline with a comparator that takes the integrity criterion up realises intelligence under that criterion; the same pipeline with the criterion only attributed to it does not [[intelligence_when_organised_and_directed]].
+
+## Recurrence
+
+A system is recurrent when the component that takes up a mechanism's output and transforms it feeds its own output back into that mechanism [[recurrent_when_output_returns]]. A recurrent system can revise: a mechanism's later transformation acts on the response to its earlier output, so no state at that mechanism is final [[revision_when_recurrent]].
+
+## Scale relativity and recursive nesting
+
+Recurrence and recursive nesting name different features [[nested_when_whole_is_mechanism]]. Recurrence is temporal re-entry: outputs feed back into later transformation [[recurrent_when_output_returns]]. Recursive nesting is scale-relative composition: an organised cognitive system at one boundary that serves as a cognitive transformation mechanism at a larger boundary is nested in that larger system [[nested_when_whole_is_mechanism]]. The same entity can therefore be modelled as a cognitive system at one boundary and as a mechanism at a larger one, e.g. neural processes in a person, people in a team, a human with an AI and tools in a composite, teams and records in an organisation [[nested_when_whole_is_mechanism]]. What the larger boundary sees the system transform is not stated separately: a system transforms what a chain of its components transforms when each takes up the previous output, and nothing that one component transforms alone, so the system's transformation is its integration [[transformation_when_components_chain]]. The chain extends as long as a further component takes up what the chain has produced [[transformation_composes_along_uptake]]. A feed-forward pipeline is thus an organised cognitive system at its own boundary and, once a component of a larger system takes up and transforms what the chain produces, a mechanism nested in that larger system [[nested_when_whole_is_mechanism]].
+
+## A person is not the privileged minimum unit
+
+The analytical question is at what boundary treating a collection of transformations as one cognitive system best explains the behaviour of interest [[whole_when_it_has_a_mechanism]].

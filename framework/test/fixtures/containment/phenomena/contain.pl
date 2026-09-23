@@ -12,7 +12,7 @@ phenomenon(car_is_unit, [whole_if_contains, contains_transitive],
 phenomenon(gear_holds_nothing, [contains_direct, contains_transitive],
     [inside(gear, engine), inside(engine, car)],
     [refuse(holds(gear, car))]).
-exclusion(nesting_without_whole, gear_in_engine_in_car, holds(car, gear), claim(whole_if_contains)).
+exclusion(containment_without_whole, gear_in_engine_in_car, holds(car, gear), claim(whole_if_contains)).
 % inconsistent: transitive containment says holds(car, gear), apart says not
 phenomenon(gear_apart_from_car, [contains_direct, contains_transitive],
     [inside(gear, engine), inside(engine, car), apart(car, gear)],

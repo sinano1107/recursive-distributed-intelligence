@@ -18,7 +18,7 @@ Each term names its Core vocabulary item; the Observation vocabulary a Phenomeno
 
 ### Primitives
 
-Six terms are not defined by any Claim. They enter as facts a Phenomenon states, and the theory takes them as given:
+These terms are not defined by any Claim. They enter as facts a Phenomenon states, and the theory takes them as given:
 
 - **Component** (`component_of/2`; Observation `belongs/2`): X lies inside the boundary drawn around S. Boundaries are analytical: whoever describes a Phenomenon draws them, and the same entity can lie inside several.
 - **Transformation** (`transformation/3`; Observation `transforms/3`): defined below only as far as composition; that a component transforms is a primitive.
@@ -34,11 +34,11 @@ One representation or state turned into another by some component. Not every tra
 _Avoid_: computation, processing step
 
 **Cognitive transformation** (`cognitive_transformation/3`):
-A transformation whose output another component takes up and transforms in turn. Being cognitive is a relation to a taker, not a property of the transformation itself: the same transformation is cognitive at a boundary that contains such a taker and not at one that does not. It need not reduce information and need not succeed. The taker may be the same component at a later time: the self is divided along time.
+A transformation whose output a component takes up and transforms in turn. Being cognitive is a relation to a taker, not a property of the transformation itself, and the relation has no boundary: a taker anywhere makes it cognitive. It need not reduce information and need not succeed. The taker may be the same component at a later time: the self is divided along time.
 _Avoid_: compression, useful transformation, intrinsic property
 
 **Cognitive transformation mechanism** (`mechanism/1`; Observation `is_mechanism/1`):
-Whatever performs a cognitive transformation. It needs no system to belong to and is silent about its own intelligence. It serves as a mechanism in a particular system (`mechanism_in/2`; Observation `serves_as_mechanism/2`) when another component of that system takes its output up and transforms it: that is the boundary-relative role, and a taker inside the boundary that does nothing with the output does not confer it.
+Whatever performs a cognitive transformation. It needs no system to belong to and is silent about its own intelligence. It serves as a mechanism in a particular system (`mechanism_in/2`; Observation `serves_as_mechanism/2`) when a component of that system takes its output up and transforms it: that is the boundary-relative role, and a taker inside the boundary that does nothing with the output does not confer it.
 _Avoid_: agent, processor, node, sub-intelligence
 
 **Coupling surface** (`shared_in/2`; Observation `shared_state/2`):
@@ -58,7 +58,7 @@ A criterion directs a system when it enters the working: a component takes the c
 _Avoid_: agency, motivation, alignment
 
 **Intelligence** (`realises_intelligence/2`; Observation `carries_out/2`):
-The working of an organised cognitive system under a criterion that directs it. Not a capacity the system owns, not a label, and not a binary property of an entity; the Core states only the two conditions, and the prose keeps the grading and boundary relativity.
+The working of an organised cognitive system under a criterion that directs it. Not a capacity the system owns and not a label. The Core states only the two conditions; the vault's grading of intelligence is not formalised.
 _Avoid_: capability, capacity, ability, IQ, scalar intelligence
 
 **Recurrence** (`recurrent_system/1`; Observation `recurrent/1`):

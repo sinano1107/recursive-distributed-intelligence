@@ -1,4 +1,6 @@
-% Observation vocabulary.
+% Observation vocabulary. DependsOn names the Claims a Phenomenon is written
+% to test: each is passed through by some expected derivation, or is a Claim
+% whose silence a refuse tests.
 % Facts: belongs(X, S), transforms(X, In, Out), consumes(Y, Out),
 %        feeds_back(Y, X), task(S, T), judges_under(E, T), stores(X, R).
 % Observations: turns(S, In, Out), carries_out(S, T), is_mechanism(X), serves_as_mechanism(X, S),
@@ -18,8 +20,8 @@ phenomenon(team_reviews_what_no_member_reviews,
 
 % E2: human + LLM + CI; no fact ascribes intelligence to any component.
 phenomenon(human_llm_ci_composite,
-    [intelligence_when_organised_and_directed, whole_when_it_has_a_mechanism,
-     mechanism_when_its_output_is_consumed],
+    [intelligence_when_organised_and_directed, directed_when_component_takes_up_criterion,
+     whole_when_it_has_a_mechanism, mechanism_when_its_output_is_consumed],
     [belongs(llm, composite), belongs(dev, composite), belongs(ci, composite),
      transforms(llm, spec, patch), consumes(dev, patch), consumes(ci, patch),
      transforms(dev, patch, verdict), transforms(ci, patch, report), consumes(dev, report),
@@ -144,8 +146,8 @@ phenomenon(painting_as_coupling_surface,
 % boundary and, by composition, a mechanism nested in a larger one. No fact
 % states that the pipeline transforms; the chain derives it.
 phenomenon(pipeline_as_mechanism_in_a_larger_system,
-    [transformation_when_components_chain, transformation_composes_along_uptake,
-     nested_when_whole_is_mechanism, intelligence_when_organised_and_directed],
+    [transformation_when_components_chain, nested_when_whole_is_mechanism,
+     intelligence_when_organised_and_directed, directed_when_component_takes_up_criterion],
     [belongs(decoder, pipeline), belongs(checksum, pipeline),
      transforms(decoder, file, pixels), consumes(checksum, pixels), transforms(checksum, pixels, digest),
      belongs(pipeline, backup_system), belongs(verifier, backup_system),
@@ -217,7 +219,7 @@ phenomenon(system_transforms_only_what_its_chain_transforms,
 % E15: a chain of three. Only the recursive composition Claim reaches x -> w;
 % the two-component base gives the sub-chains x -> z and y -> w.
 phenomenon(three_step_chain,
-    [transformation_composes_along_uptake],
+    [transformation_composes_along_uptake, transformation_when_components_chain],
     [belongs(a, box), belongs(b, box), belongs(c, box),
      transforms(a, x, y), consumes(b, y), transforms(b, y, z), consumes(c, z), transforms(c, z, w)],
     [expect(turns(box, x, w))]).

@@ -17,6 +17,8 @@ claim(transformation_composes_along_uptake, required,
 % A transformation is cognitive when something takes its output up and
 % transforms it in turn. Being cognitive is a relation to a taker, not a
 % property of the transformation; a taker that only records is not one.
+% The taker may be the same component at a later time: the self is divided
+% along time, so X = Y is allowed on purpose (issue #9).
 claim(cognitive_when_taken_up_and_transformed, required,
     (cognitive_transformation(X, In, Out) :-
         transformation(X, In, Out), takes_up(Y, Out), transformation(Y, Out, _))).

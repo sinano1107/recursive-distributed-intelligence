@@ -196,3 +196,13 @@ phenomenon(team_directed_by_an_editor,
      task(team, publication), judges_under(editor, publication),
      consumes(editor, revision), transforms(editor, revision, notes), feeds_back(editor, alice)],
     [expect(carries_out(team, publication))]).
+
+% E13: the taker may be the same component later: the self is divided
+% along time. A solitary author who re-reads and reworks the draft is a
+% mechanism, and the writing is a recurrent cognitive system.
+phenomenon(author_rereads_own_draft,
+    [cognitive_when_taken_up_and_transformed, mechanism_when_it_transforms_cognitively,
+     whole_when_it_has_a_mechanism, recurrent_when_output_returns],
+    [belongs(author, writing), transforms(author, thoughts, draft),
+     consumes(author, draft), transforms(author, draft, revision), feeds_back(author, author)],
+    [expect(is_mechanism(author)), expect(cognitive_whole(writing)), expect(recurrent(writing))]).

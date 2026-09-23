@@ -23,7 +23,7 @@ One representation or state turned into another by some component. Not every tra
 _Avoid_: computation, processing step
 
 **Cognitive transformation** (`cognitive_transformation/3`):
-A transformation whose output another component takes up and transforms in turn. Being cognitive is a relation to a taker, not a property of the transformation itself: the same transformation is cognitive at a boundary that contains such a taker and not at one that does not. It need not reduce information and need not succeed.
+A transformation whose output another component takes up and transforms in turn. Being cognitive is a relation to a taker, not a property of the transformation itself: the same transformation is cognitive at a boundary that contains such a taker and not at one that does not. It need not reduce information and need not succeed. The taker may be the same component at a later time: the self is divided along time.
 _Avoid_: compression, useful transformation, intrinsic property
 
 **Cognitive transformation mechanism** (`mechanism/1`; Observation `is_mechanism/1`):

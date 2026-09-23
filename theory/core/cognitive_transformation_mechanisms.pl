@@ -71,11 +71,12 @@ claim(nested_when_whole_is_mechanism, required,
     (nested_in(X, S) :- cognitive_system(X), mechanism_in(X, S))).
 
 % Recurrence (temporal re-entry): the component that takes up a mechanism's
-% output feeds back into that mechanism.
+% output and transforms it feeds its output back into that mechanism.
 claim(recurrent_when_output_returns, required,
     (recurrent_system(S) :-
-        component_of(X, S), cognitive_transformation(X, _, Out),
-        takes_up(Y, Out), component_of(Y, S), returns_to(Y, X))).
+        component_of(X, S), transformation(X, _, Out),
+        component_of(Y, S), takes_up(Y, Out), transformation(Y, Out, _),
+        returns_to(Y, X))).
 
 % Recurrence supports revision: a mechanism's later transformation acts on
 % the response to its earlier output. Provisional: the vault hedges it

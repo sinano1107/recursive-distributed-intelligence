@@ -42,6 +42,23 @@ phenomenon(person_is_whole_and_component,
     [expect(cognitive_whole(alice)), expect(cognitive_whole(team)),
      expect(serves_as_mechanism(alice, team)), expect(nested(alice, team))]).
 
+% E4: a critic that adds information, and re-entry.
+phenomenon(critic_in_a_studio,
+    [mechanism_when_its_output_is_consumed, recurrent_when_output_returns],
+    [belongs(critic, studio), belongs(planner, studio),
+     transforms(critic, proposal, review), consumes(planner, review),
+     transforms(planner, review, proposal2), feeds_back(planner, critic)],
+    [expect(serves_as_mechanism(critic, studio)), expect(recurrent(studio))]).
+
+% E4b: the provisional claim that recurrence supports revision, tested on
+% its own so that a failure stays pending.
+phenomenon(studio_can_revise,
+    [revision_when_recurrent],
+    [belongs(critic, studio), belongs(planner, studio),
+     transforms(critic, proposal, review), consumes(planner, review),
+     transforms(planner, review, proposal2), feeds_back(planner, critic)],
+    [expect(revisable(studio))]).
+
 % E5: a mechanism belongs to no named system; the client transforms the
 % translation, nobody transforms the reply.
 phenomenon(translator_without_a_system,
@@ -49,23 +66,6 @@ phenomenon(translator_without_a_system,
     [transforms(translator, letter, translation), consumes(client, translation),
      transforms(client, translation, reply)],
     [expect(is_mechanism(translator)), refuse(is_mechanism(client))]).
-
-% E4: a critic that adds information, and re-entry.
-phenomenon(critic_in_a_design_loop,
-    [mechanism_when_its_output_is_consumed, recurrent_when_output_returns],
-    [belongs(critic, design_loop), belongs(planner, design_loop),
-     transforms(critic, proposal, review), consumes(planner, review),
-     transforms(planner, review, proposal2), feeds_back(planner, critic)],
-    [expect(serves_as_mechanism(critic, design_loop)), expect(recurrent(design_loop))]).
-
-% E4b: the provisional claim that recurrence supports revision, tested on
-% its own so that a failure stays pending.
-phenomenon(design_loop_can_revise,
-    [revision_when_recurrent],
-    [belongs(critic, design_loop), belongs(planner, design_loop),
-     transforms(critic, proposal, review), consumes(planner, review),
-     transforms(planner, review, proposal2), feeds_back(planner, critic)],
-    [expect(revisable(design_loop))]).
 
 % R1: identical uncoupled processors; more components are not better.
 phenomenon(uncoupled_processors,
@@ -233,3 +233,15 @@ phenomenon(taker_inside_that_does_nothing,
     [belongs(x, s), belongs(y, s), transforms(x, a, b), consumes(y, b),
      consumes(z, b), transforms(z, b, c)],
     [expect(is_mechanism(x)), refuse(serves_as_mechanism(x, s)), refuse(cognitive_whole(s))]).
+
+% R10: an evaluator that judges under the criterion and takes the output up
+% but never returns anything does not direct the team.
+phenomenon(team_judged_without_reply,
+    [intelligence_when_organised_and_directed, directed_when_evaluator_returns,
+     whole_when_it_has_a_mechanism],
+    [belongs(alice, team), belongs(bob, team),
+     transforms(alice, draft, critique), consumes(bob, critique),
+     transforms(bob, critique, revision), feeds_back(bob, alice),
+     task(team, publication), judges_under(editor, publication),
+     consumes(editor, revision), transforms(editor, revision, notes)],
+    [expect(cognitive_whole(team)), refuse(carries_out(team, publication))]).

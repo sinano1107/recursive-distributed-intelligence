@@ -25,7 +25,7 @@ These terms are not defined by any Claim. They enter as facts a Phenomenon state
 - **Uptake** (`takes_up/2`; Observation `consumes/2`): Y takes R as input.
 - **Return** (`returns_to/2`; Observation `feeds_back/2`): Y's output goes back into X.
 - **Task** (`task_criterion/2`; Observation `task/2`) and **Evaluator** (`evaluator_of/2`; Observation `judges_under/2`): a criterion attributed to S, and who judges under it.
-- **Holding** (`retains/2`; Observation `stores/2`): X keeps R available without transforming it. "Passively" is the gloss for the absence of a transformation fact, which the Core cannot state.
+- **Holding** (`retains/2`; Observation `stores/2`): X keeps R available without transforming it. "Passively" glosses the absence of a transformation by X.
 
 ### Cognitive transformation mechanisms
 
@@ -62,7 +62,7 @@ The working of an organised cognitive system under a criterion that directs it. 
 _Avoid_: capability, capacity, ability, IQ, scalar intelligence
 
 **Recurrence** (`recurrent_system/1`; Observation `recurrent/1`):
-Temporal re-entry: the component that takes up a mechanism's output feeds its own output back into that mechanism. Distinct from recursive nesting.
+Temporal re-entry: the component that takes up a mechanism's output and transforms it feeds its own output back into that mechanism. Distinct from recursive nesting.
 _Avoid_: recursion, loop
 
 **Revision through recurrence** (`can_revise/1`, provisional; Observation `revisable/1`):

@@ -16,4 +16,4 @@ How the skills chain in this repo, session boundaries, language, and the theory-
 
 ### Domain docs
 
-Multi-context: `CONTEXT-MAP.md` at the repo root points to `framework/CONTEXT.md` and `theory/CONTEXT.md`. Repo-wide ADRs live in `docs/adr/`, framework-scoped ones in `framework/docs/adr/`. See `docs/agents/domain.md`.
+Multi-context: `CONTEXT-MAP.md` at the repo root points to `framework/CONTEXT.md` and `theory/CONTEXT.md`. Repo-wide ADRs live in `docs/adr/`, framework-scoped ones in `framework/docs/adr/`, theory-scoped ones in `theory/docs/adr/`. See `docs/agents/domain.md`.

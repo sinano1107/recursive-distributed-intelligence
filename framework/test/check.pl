@@ -23,4 +23,21 @@ test(exclusion_test_names_the_violated_claim_or_vocabulary_item) :-
     memberchk(verdict(glows_without_power, violates(powered/1)), Verdicts),
     memberchk(verdict(glows_without_plugged_claim, violates(claim(powered_when_plugged))), Verdicts).
 
+test(required_claim_fails_the_check_when_a_dependent_test_fails) :-
+    fixture(lamps, Dir),
+    check(Dir, Verdicts),
+    memberchk(verdict(shed_lamp_never_switched, failed(underivable(glows(shed)))), Verdicts),
+    memberchk(verdict(hall_lamp_plugged_and_on, failed(unexpected(glows(hall)))), Verdicts).
+
+test(provisional_claim_leaves_a_failing_test_pending) :-
+    fixture(lamps, Dir),
+    check(Dir, Verdicts),
+    memberchk(verdict(moonlit_porch_lamp, pending(underivable(glows(porch)))), Verdicts).
+
+test(untested_claim_is_excluded_from_the_core_and_its_tests_from_the_verdicts) :-
+    fixture(lamps, Dir),
+    check(Dir, Verdicts),
+    \+ memberchk(verdict(enchanted_attic_lamp, _), Verdicts),
+    memberchk(verdict(enchanted_attic_lamp_by_power, failed(underivable(glows(attic)))), Verdicts).
+
 :- end_tests(check).

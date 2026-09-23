@@ -32,13 +32,28 @@ head_body(H, H, true).
 check(Dir, Verdicts) :-
     load_theory(Dir),
     findall(verdict(Name, Outcome),
-            ( phenomenon(Name, _, _, _),
-              explains(Name, Derivation),
-              outcome(Derivation, Outcome)
-            ; exclusion(Name, Phenomenon, Obs, Excluded),
-              phenomenon(Phenomenon, _, Facts, _),
-              exclusion_outcome(Obs, Facts, Excluded, Outcome) ),
+            ( test(Name, Dependencies, Raw),
+              status_outcome(Dependencies, Raw, Outcome) ),
             Verdicts).
+
+test(Name, Dependencies, Outcome) :-
+    phenomenon(Name, Dependencies, _, _),
+    explains(Name, Derivation),
+    outcome(Derivation, Outcome).
+test(Name, Dependencies, Outcome) :-
+    exclusion(Name, Phenomenon, Obs, Excluded),
+    phenomenon(Phenomenon, Dependencies, Facts, _),
+    exclusion_outcome(Obs, Facts, Excluded, Outcome).
+
+% Status: a test depending on an untested Claim is excluded (no Verdict).
+% A failing test depending only on provisional Claims is pending; one
+% depending on a required (or not yet written) Claim is failed.
+status_outcome(Dependencies, _, _) :-
+    member(D, Dependencies), claim(D, untested, _, _), !, fail.
+status_outcome(Dependencies, failed(Reason), pending(Reason)) :-
+    Dependencies \== [],
+    forall(member(D, Dependencies), claim(D, provisional, _, _)), !.
+status_outcome(_, Outcome, Outcome).
 
 % An Exclusion test is violated when any Derivation of Obs passes through
 % the excluded Claim (claim(Name)) or vocabulary item (Functor/Arity).
@@ -52,6 +67,8 @@ passes_through(Trace, F/A) :-
     member(Step, Trace), arg(_, Step, Goal), compound(Goal), functor(Goal, F, A), !.
 
 outcome(Derivation, inconsistent) :- memberchk(inconsistent(_, _, _), Derivation), !.
+outcome(Derivation, failed(underivable(Obs))) :- memberchk(underivable(Obs), Derivation), !.
+outcome(Derivation, failed(unexpected(Obs))) :- memberchk(unexpected(Obs, _), Derivation), !.
 outcome(Derivation, refuses) :- forall(member(S, Derivation), S = refused(_)), !.
 outcome(_, explains).
 
@@ -69,9 +86,11 @@ expectation_step(Facts, Expectation, inconsistent(Obs, Trace, NegTrace)) :-
     once(derive(Obs, Facts, Trace)),
     once(derive(Neg, Facts, NegTrace)), !.
 expectation_step(Facts, expect(Obs), derived(Obs, Trace)) :-
-    once(derive(Obs, Facts, Trace)).
-expectation_step(Facts, refuse(Obs), refused(Obs)) :-
-    \+ derive(Obs, Facts, _).
+    once(derive(Obs, Facts, Trace)), !.
+expectation_step(_, expect(Obs), underivable(Obs)).
+expectation_step(Facts, refuse(Obs), unexpected(Obs, Trace)) :-
+    once(derive(Obs, Facts, Trace)), !.
+expectation_step(_, refuse(Obs), refused(Obs)).
 
 negation(not(Obs), Obs) :- !.
 negation(Obs, not(Obs)).
@@ -83,4 +102,5 @@ derive(G, Facts, [fact(G)]) :- member(G, Facts).
 derive(G, Facts, [via(bridge(Name), G)|Trace]) :-
     bridge(Name, G, Body), derive(Body, Facts, Trace).
 derive(G, Facts, [via(claim(Name), G)|Trace]) :-
-    claim(Name, _, G, Body), derive(Body, Facts, Trace).
+    claim(Name, Status, G, Body), Status \== untested,
+    derive(Body, Facts, Trace).

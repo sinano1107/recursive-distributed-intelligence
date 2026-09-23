@@ -4,9 +4,10 @@
 :- begin_tests(theory).
 
 % Pending is allowed: it is issued only when every dependency is provisional.
-test(every_phenomenon_and_exclusion_passes, Bad == []) :-
+test(every_verdict_is_explains_refuses_or_pending, Bad == []) :-
     nb_getval(theory_dir, Dir),
     check(Dir, Verdicts),
+    Verdicts \== [],   % check/2 returns [] for a missing directory
     exclude([verdict(_, O)]>>(O == explains ; O == refuses ; O = pending(_)), Verdicts, Bad).
 
 :- end_tests(theory).

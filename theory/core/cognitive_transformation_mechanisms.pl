@@ -4,6 +4,16 @@
 % realises_intelligence/2, shared_in/2, nested_in/2, recurrent_system/1,
 % can_revise/1.
 
+% A system transforms what its components transform, and what a chain of
+% them transforms along uptake. So a system's transformation at a larger
+% boundary follows from its organisation instead of being stated as a fact.
+claim(transformation_of_component_is_of_system, required,
+    (transformation(S, In, Out) :- component_of(X, S), transformation(X, In, Out))).
+claim(transformation_composes_along_uptake, required,
+    (transformation(S, In, Out) :-
+        transformation(S, In, Mid), component_of(Y, S),
+        takes_up(Y, Mid), transformation(Y, Mid, Out))).
+
 % A transformation is cognitive when something takes its output up and
 % transforms it in turn. Being cognitive is a relation to a taker, not a
 % property of the transformation; a taker that only records is not one.

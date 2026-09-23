@@ -1,7 +1,7 @@
 % Observation vocabulary.
 % Facts: belongs(X, S), transforms(X, In, Out), consumes(Y, Out),
 %        feeds_back(Y, X), task(S, T), stores(X, R).
-% Observations: carries_out(S, T), is_mechanism(X), serves_as_mechanism(X, S),
+% Observations: turns(S, In, Out), carries_out(S, T), is_mechanism(X), serves_as_mechanism(X, S),
 %               cognitive_whole(X), shared_state(R, S), nested(X, S), recurrent(S),
 %               revisable(S).
 
@@ -107,3 +107,62 @@ exclusion(nesting_without_recurrence, person_is_whole_and_component,
     serves_as_mechanism(alice, team), feeds_back/2).
 exclusion(nesting_without_recurrence_claim, person_is_whole_and_component,
     serves_as_mechanism(alice, team), claim(recurrent_when_output_returns)).
+
+% E6: the one-step rule is asymmetric on purpose: a's transformation is
+% cognitive because b takes it up and transforms it; b's is terminal here.
+phenomenon(two_step_chain,
+    [cognitive_when_taken_up_and_transformed, mechanism_when_it_transforms_cognitively],
+    [transforms(a, x, y), consumes(b, y), transforms(b, y, z)],
+    [expect(is_mechanism(a)), refuse(is_mechanism(b))]).
+
+% E7: the last transformation before action is taken up by the world.
+phenomenon(action_taken_up_by_the_world,
+    [cognitive_when_taken_up_and_transformed, mechanism_when_it_transforms_cognitively],
+    [transforms(a, x, y), consumes(b, y), transforms(b, y, move),
+     consumes(world, move), transforms(world, move, position)],
+    [expect(is_mechanism(b))]).
+
+% E8/R5: uptake has no date. A paper read a century later was a cognitive
+% transformation; one only archived was not.
+phenomenon(paper_read_a_century_later,
+    [cognitive_when_taken_up_and_transformed, mechanism_when_it_transforms_cognitively],
+    [transforms(author, thoughts, paper), consumes(reader, paper), transforms(reader, paper, understanding)],
+    [expect(is_mechanism(author))]).
+phenomenon(paper_never_read,
+    [cognitive_when_taken_up_and_transformed, mechanism_when_it_transforms_cognitively],
+    [transforms(author, thoughts, paper), stores(archive, paper)],
+    [refuse(is_mechanism(author))]).
+
+% E9: a work is a coupling surface across time, not a mechanism.
+phenomenon(painting_as_coupling_surface,
+    [shared_state_when_stored_and_consumed],
+    [belongs(archive, culture), belongs(viewer, culture), stores(archive, painting),
+     consumes(viewer, painting), transforms(viewer, painting, critique)],
+    [expect(shared_state(painting, culture)), refuse(serves_as_mechanism(archive, culture))]).
+
+% E10: a feed-forward pipeline is an organised cognitive system at its own
+% boundary and, by composition, a mechanism nested in a larger one. No fact
+% states that the pipeline transforms; the chain derives it.
+phenomenon(pipeline_as_mechanism_in_a_larger_system,
+    [transformation_of_component_is_of_system, transformation_composes_along_uptake,
+     nested_when_whole_is_mechanism, intelligence_when_organised_and_tasked],
+    [belongs(decoder, pipeline), belongs(checksum, pipeline),
+     transforms(decoder, file, pixels), consumes(checksum, pixels), transforms(checksum, pixels, digest),
+     belongs(pipeline, backup_system), belongs(verifier, backup_system),
+     consumes(verifier, digest), transforms(verifier, digest, verdict),
+     task(backup_system, safe_storage)],
+    [expect(turns(pipeline, file, digest)), expect(is_mechanism(pipeline)),
+     expect(nested(pipeline, backup_system)), expect(carries_out(backup_system, safe_storage)),
+     refuse(carries_out(pipeline, safe_storage))]).
+
+% R6/R7: the same pipeline alone: organised, undirected, not recurrent.
+phenomenon(pipeline_alone,
+    [whole_when_it_has_a_mechanism, intelligence_when_organised_and_tasked, recurrent_when_output_returns],
+    [belongs(decoder, pipeline), belongs(checksum, pipeline),
+     transforms(decoder, file, pixels), consumes(checksum, pixels), transforms(checksum, pixels, digest)],
+    [expect(cognitive_whole(pipeline)), refuse(carries_out(pipeline, integrity)), refuse(recurrent(pipeline))]).
+phenomenon(pipeline_cannot_revise,
+    [revision_when_recurrent],
+    [belongs(decoder, pipeline), belongs(checksum, pipeline),
+     transforms(decoder, file, pixels), consumes(checksum, pixels), transforms(checksum, pixels, digest)],
+    [refuse(revisable(pipeline))]).

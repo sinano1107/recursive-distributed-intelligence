@@ -7,6 +7,7 @@ bridge(returns_from_feeds_back, (returns_to(Y, X) :- feeds_back(Y, X))).
 bridge(criterion_from_task, (task_criterion(S, T) :- task(S, T))).
 bridge(retains_from_stores, (retains(X, R) :- stores(X, R))).
 % Core out to Observations.
+bridge(turns_from_transformation, (turns(S, In, Out) :- transformation(S, In, Out))).
 bridge(carries_out_from_realises_intelligence, (carries_out(S, T) :- realises_intelligence(S, T))).
 bridge(is_mechanism_from_mechanism, (is_mechanism(X) :- mechanism(X))).
 bridge(mechanism_from_mechanism_in, (serves_as_mechanism(X, S) :- mechanism_in(X, S))).

@@ -1,12 +1,12 @@
 :- module(framework, [load_theory/1, check/2, explains/2]).
 
-:- dynamic claim/4, bridge/3, phenomenon/4.
+:- dynamic claim/4, bridge/3, phenomenon/4, exclusion/4.
 
 % ---- Loading a theory directory: core/, bridge/, phenomena/ -----------------
 
 load_theory(Dir) :-
     retractall(claim(_, _, _, _)), retractall(bridge(_, _, _)),
-    retractall(phenomenon(_, _, _, _)),
+    retractall(phenomenon(_, _, _, _)), retractall(exclusion(_, _, _, _)),
     forall(theory_term(Dir, core, T), store_core(T)),
     forall(theory_term(Dir, bridge, T), store_bridge(T)),
     forall(theory_term(Dir, phenomena, T), assertz(T)).
@@ -34,8 +34,22 @@ check(Dir, Verdicts) :-
     findall(verdict(Name, Outcome),
             ( phenomenon(Name, _, _, _),
               explains(Name, Derivation),
-              outcome(Derivation, Outcome) ),
+              outcome(Derivation, Outcome)
+            ; exclusion(Name, Phenomenon, Obs, Excluded),
+              phenomenon(Phenomenon, _, Facts, _),
+              exclusion_outcome(Obs, Facts, Excluded, Outcome) ),
             Verdicts).
+
+% An Exclusion test is violated when any Derivation of Obs passes through
+% the excluded Claim (claim(Name)) or vocabulary item (Functor/Arity).
+exclusion_outcome(Obs, Facts, Excluded, violates(Excluded)) :-
+    derive(Obs, Facts, Trace),
+    passes_through(Trace, Excluded), !.
+exclusion_outcome(_, _, _, explains).
+
+passes_through(Trace, claim(Name)) :- memberchk(via(claim(Name), _), Trace).
+passes_through(Trace, F/A) :-
+    member(Step, Trace), arg(_, Step, Goal), compound(Goal), functor(Goal, F, A), !.
 
 outcome(Derivation, inconsistent) :- memberchk(inconsistent(_, _, _), Derivation), !.
 outcome(Derivation, refuses) :- forall(member(S, Derivation), S = refused(_)), !.

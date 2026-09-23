@@ -12,4 +12,15 @@ test(one_verdict_per_phenomenon_explains_refuses_or_inconsistent) :-
     memberchk(verdict(hall_lamp_unplugged, refuses), Verdicts),
     memberchk(verdict(flickering_lamp, inconsistent), Verdicts).
 
+test(exclusion_test_explains_when_no_derivation_passes_through_the_excluded_item) :-
+    fixture(lamps, Dir),
+    check(Dir, Verdicts),
+    memberchk(verdict(glows_without_dark, explains), Verdicts).
+
+test(exclusion_test_names_the_violated_claim_or_vocabulary_item) :-
+    fixture(lamps, Dir),
+    check(Dir, Verdicts),
+    memberchk(verdict(glows_without_power, violates(powered/1)), Verdicts),
+    memberchk(verdict(glows_without_plugged_claim, violates(claim(powered_when_plugged))), Verdicts).
+
 :- end_tests(check).

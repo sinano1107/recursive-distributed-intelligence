@@ -20,8 +20,10 @@ phenomenon(shed_lamp_never_switched, [powered_when_plugged],   % required, fails
     [connected(shed)], [expect(glows(shed))]).
 phenomenon(hall_lamp_plugged_and_on, [lit_when_powered_and_on], % required, refusal violated
     [connected(hall), flipped(hall, on)], [refuse(glows(hall))]).
-phenomenon(moonlit_porch_lamp, [lit_when_bright_room],          % provisional, fails
-    [moonlit(porch)], [expect(glows(porch))]).
+phenomenon(sunny_porch_lamp, [lit_when_bright_room],            % provisional, explains
+    [sunny(porch)], [expect(glows(porch))]).
+phenomenon(dim_porch_lamp, [lit_when_bright_room],              % provisional, fails
+    [connected(porch)], [expect(glows(porch))]).
 phenomenon(enchanted_attic_lamp, [lit_by_magic],                 % untested: excluded
     [enchanted(attic)], [expect(glows(attic))]).
 phenomenon(enchanted_attic_lamp_by_power, [lit_when_powered_and_on], % untested claim can't help

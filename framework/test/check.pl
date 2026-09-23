@@ -32,7 +32,8 @@ test(required_claim_fails_the_check_when_a_dependent_test_fails) :-
 test(provisional_claim_leaves_a_failing_test_pending) :-
     fixture(lamps, Dir),
     check(Dir, Verdicts),
-    memberchk(verdict(moonlit_porch_lamp, pending(underivable(glows(porch)))), Verdicts).
+    memberchk(verdict(sunny_porch_lamp, explains), Verdicts),
+    memberchk(verdict(dim_porch_lamp, pending(underivable(glows(porch)))), Verdicts).
 
 test(untested_claim_is_excluded_from_the_core_and_its_tests_from_the_verdicts) :-
     fixture(lamps, Dir),
@@ -69,5 +70,20 @@ test(derivation_through_no_dependent_claim_is_vacuous_and_never_pending) :-
     check(Dir, Verdicts),
     memberchk(verdict(cheap_glow, failed(vacuous(glows_cheaply(kitchen)))), Verdicts),
     memberchk(verdict(cheap_glow_provisional, failed(vacuous(glows_cheaply(kitchen)))), Verdicts).
+
+test(claim_body_goal_that_is_no_claim_or_bridge_head_is_a_load_error,
+     throws(theory_error(unresolved((\==)/2, claim(sibling_rule))))) :-
+    fixture(unresolved_claim_body, Dir),
+    check(Dir, _).
+
+test(bridge_body_goal_that_is_no_head_and_no_stated_fact_is_a_load_error,
+     throws(theory_error(unresolved(insid/2, bridge(part_from_inside))))) :-
+    fixture(unresolved_bridge_body, Dir),
+    check(Dir, _).
+
+test(phenomenon_fact_read_by_no_bridge_rule_is_a_load_error,
+     throws(theory_error(unresolved(holds/2, phenomenon(fact_is_observation))))) :-
+    fixture(unresolved_phenomenon_fact, Dir),
+    check(Dir, _).
 
 :- end_tests(check).

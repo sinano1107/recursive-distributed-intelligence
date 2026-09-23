@@ -12,7 +12,8 @@ load_theory(Dir) :-
     retractall(template(_, _)),
     forall(theory_term(Dir, core, T, _), store_core(T)),
     forall(theory_term(Dir, bridge, T, _), store_bridge(T)),
-    forall(theory_term(Dir, phenomena, T, File), store_phenomenon(T, File)).
+    forall(theory_term(Dir, phenomena, T, File), store_phenomenon(T, File)),
+    validate_connectivity.
 
 % Each directory accepts only its own kinds of term.
 allowed(core, claim). allowed(core, template). allowed(bridge, bridge).
@@ -64,6 +65,39 @@ body_goal(G, G).
 
 head_body((H :- B), H, B) :- !.
 head_body(H, H, true).
+
+% Nothing may resolve to nothing: a Claim body goal must be a Claim or
+% Bridge head; a Bridge body goal must be one of those or a fact some
+% Phenomenon states; a Phenomenon fact must be read by some Bridge rule.
+% (This also rules out built-ins in bodies.) not/1 is looked through.
+validate_connectivity :-
+    forall(( claim(Name, _, _, Body), body_goal(Body, G), \+ head_functor(G) ),
+           unresolved(G, claim(Name))),
+    forall(( bridge(Name, _, Body), body_goal(Body, G),
+             \+ head_functor(G), \+ fact_functor(G) ),
+           unresolved(G, bridge(Name))),
+    forall(( phenomenon(Name, _, Facts, _), member(F, Facts), \+ read_by_bridge(F) ),
+           unresolved(F, phenomenon(Name))).
+
+unresolved(Goal, Where) :-
+    goal_functor(Goal, FA),
+    throw(theory_error(unresolved(FA, Where))).
+
+goal_functor(not(G), FA) :- !, goal_functor(G, FA).
+goal_functor(G, F/A) :- functor(G, F, A).
+
+head_functor(G) :-
+    goal_functor(G, FA),
+    ( claim(_, _, Head, _) ; bridge(_, Head, _) ),
+    goal_functor(Head, FA), !.
+fact_functor(G) :-
+    goal_functor(G, FA),
+    phenomenon(_, _, Facts, _), member(F, Facts),
+    goal_functor(F, FA), !.
+read_by_bridge(F) :-
+    goal_functor(F, FA),
+    bridge(_, _, Body), body_goal(Body, G),
+    goal_functor(G, FA), !.
 
 % ---- Checking: one Verdict per test -----------------------------------------
 

@@ -28,11 +28,11 @@ _Avoid_: agent, processor, node, sub-intelligence
 
 **Coupling surface** (`shared_in/2`; Observation `shared_state/2`):
 A state that one component passively holds and another component takes up. Holding is not transforming: a repository is a coupling surface, not a mechanism.
-_Avoid_: memory, channel, interface, mapping
+_Avoid_: memory, channel, interface
 
 **Organised cognitive system** (`cognitive_system/1`; Observation `cognitive_whole/1`):
 A system in which at least one component serves as a cognitive transformation mechanism. Organisation alone makes one; no task and no recurrence is required.
-_Avoid_: collective, group mind, intelligent system, whole
+_Avoid_: collective, group mind, intelligent system
 
 **Task criterion** (`task_criterion/2`):
 The task- or value-relative criterion under which a system's transitions count as effective. Supplied to the system from outside; it need not be an internal goal of the system.
@@ -44,7 +44,7 @@ _Avoid_: capability, capacity, ability, IQ, scalar intelligence
 
 **Recurrence** (`recurrent_system/1`; Observation `revisable/1`):
 Temporal re-entry: the component that takes up a mechanism's output feeds its own output back into that mechanism. It supports correction; it does not guarantee it, and it is distinct from recursive nesting.
-_Avoid_: recursion, loop, feedback
+_Avoid_: recursion, loop
 
 **Recursive nesting** (`nested_in/2`; Observation `nested/2`):
 Scale-relative composition: an organised cognitive system at one boundary that serves as a cognitive transformation mechanism at a larger boundary. The same entity can be a system at one scale and a mechanism at another.

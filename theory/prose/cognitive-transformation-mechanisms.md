@@ -4,7 +4,7 @@ The foundational vocabulary of the recursive distributed-intelligence theory: th
 
 ## Why this vocabulary exists
 
-If every component that contributes to cognition were already called intelligent, the theory would be circular: intelligence would emerge from smaller intelligences [[mechanism_when_it_transforms_cognitively]]. Instead, intelligence can emerge from the organised interaction of local transformation mechanisms that do not themselves need to possess the same kind of intelligence as the larger system [[whole_when_it_has_a_mechanism]]. Nothing in the definition of a mechanism refers to the mechanism's own intelligence [[mechanism_when_it_transforms_cognitively]].
+If every component that contributes to cognition were already called intelligent, the theory would be circular: intelligence would emerge from smaller intelligences [[mechanism_when_it_transforms_cognitively]]. Instead, intelligence can emerge from the organised interaction of local transformation mechanisms that do not themselves need to possess the same kind of intelligence as the larger system [[whole_when_it_has_a_mechanism]].
 
 ## Cognitive transformation
 
@@ -12,7 +12,7 @@ A transformation is cognitive when a component, possibly the same one at a later
 
 ## Cognitive transformation mechanism
 
-A cognitive transformation mechanism is whatever performs a cognitive transformation [[mechanism_when_it_transforms_cognitively]]. It need not belong to any system: a translator whose translation a client takes up and answers is a mechanism, with no system named [[mechanism_when_it_transforms_cognitively]]. It serves as a mechanism in a particular system when another component of that system takes its output up and transforms it; this is the boundary-relative role, and a taker inside the boundary that does nothing with the output does not confer it [[mechanism_when_its_output_is_consumed]]. Depending on the scale of analysis, a mechanism may be a specialised human cognitive process, a person, an LLM, a retrieval system, a critic or verifier, a memory system that transforms usable state, a software tool, or a team performing one transformation inside a larger workflow [[mechanism_when_it_transforms_cognitively]]. The term names a functional role, not a claim about consciousness, personhood, autonomy, or moral status [[mechanism_when_it_transforms_cognitively]].
+A cognitive transformation mechanism is whatever performs a cognitive transformation [[mechanism_when_it_transforms_cognitively]]. It need not belong to any system: a translator whose translation a client takes up and answers is a mechanism, with no system named [[mechanism_when_it_transforms_cognitively]]. It serves as a mechanism in a particular system when another component of that system takes its output up and transforms it; this is the boundary-relative role, and a taker inside the boundary that does nothing with the output does not confer it [[mechanism_when_its_output_is_consumed]]. Depending on the scale of analysis, a mechanism may be a specialised human cognitive process, a person, an LLM, a retrieval system, a critic or verifier, a memory system that transforms usable state, a software tool, or a team performing one transformation inside a larger workflow [[mechanism_when_it_transforms_cognitively]].
 
 ## States and representations are coupling surfaces
 
@@ -24,7 +24,7 @@ A system is an organised cognitive system when at least one of its components se
 
 ## Direction
 
-A task criterion directs a system only when it enters the working; a task that is merely attributed to a system directs nothing [[directed_when_component_takes_up_criterion]]. It enters from inside when a component of the system takes the criterion up, as a comparator takes up the integrity criterion or a reviewer takes up the brief [[directed_when_component_takes_up_criterion]]. It enters from outside when an evaluator judging under the criterion takes the system's output up and its response returns into the system, as an editor's notes return to the author [[directed_when_evaluator_returns]]. In neither case need the criterion be represented as an autonomous internal goal of the system: direction can be supplied by the task, the environment, or an evaluator, so intelligence and agency are not synonyms [[directed_when_evaluator_returns]].
+A task criterion directs a system only when it enters the working; a task that is merely attributed to a system directs nothing [[directed_when_component_takes_up_criterion]]. It enters from inside when a component of the system takes the criterion up, as a comparator takes up the integrity criterion or a reviewer takes up the brief [[directed_when_component_takes_up_criterion]]. It enters from outside when an evaluator judging under the criterion takes the system's output up and its response returns into the system, as an editor's notes return to the author [[directed_when_evaluator_returns]]. Direction can thus be supplied by the task, the environment, or an evaluator [[directed_when_evaluator_returns]].
 
 ## Intelligence
 
@@ -32,7 +32,7 @@ Within this theory, intelligence is the working of an organised cognitive system
 
 ## Recurrence
 
-A system is recurrent when the component that takes up a mechanism's output and transforms it feeds its own output back into that mechanism [[recurrent_when_output_returns]]. A recurrent system can revise: a mechanism's later transformation acts on the response to its earlier output, so no state at that mechanism is final [[revision_when_recurrent]]. Whether revision happens, corrects, or is affordable is not asserted, and recurrence is not asserted as a necessary condition for every form of intelligent behaviour [[revision_when_recurrent]].
+A system is recurrent when the component that takes up a mechanism's output and transforms it feeds its own output back into that mechanism [[recurrent_when_output_returns]]. A recurrent system can revise: a mechanism's later transformation acts on the response to its earlier output, so no state at that mechanism is final [[revision_when_recurrent]].
 
 ## Scale relativity and recursive nesting
 
@@ -40,4 +40,4 @@ Recurrence and recursive nesting name different features [[nested_when_whole_is_
 
 ## A person is not the privileged minimum unit
 
-Persons remain important loci of embodiment, experience, consent, responsibility, memory, and agency, but for explaining cognition there is no requirement that the human body be the unique smallest meaningful unit of transformation or the unique largest coherent cognitive subject [[nested_when_whole_is_mechanism]]. The analytical question is at what boundary treating a collection of transformations as one cognitive system best explains the behaviour of interest [[whole_when_it_has_a_mechanism]].
+The analytical question is at what boundary treating a collection of transformations as one cognitive system best explains the behaviour of interest [[whole_when_it_has_a_mechanism]].

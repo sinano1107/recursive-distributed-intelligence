@@ -1,0 +1,5 @@
+interface:
+  display_name: "Implementation delegation"
+  short_description: "Pick model, effort, and review strength for an issue"
+policy:
+  allow_implicit_invocation: false

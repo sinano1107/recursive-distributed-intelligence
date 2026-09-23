@@ -1,0 +1,5 @@
+interface:
+  display_name: "Implement (RDI)"
+  short_description: "Build a framework issue or a theory slice end to end"
+policy:
+  allow_implicit_invocation: false

@@ -102,7 +102,10 @@ exclusion_outcome(_, _, _, explains).
 
 passes_through(Trace, claim(Name)) :- memberchk(via(claim(Name), _), Trace).
 passes_through(Trace, F/A) :-
-    member(Step, Trace), arg(_, Step, Goal), compound(Goal), functor(Goal, F, A), !.
+    member(Step, Trace), step_goal(Step, Goal), functor(Goal, F, A), !.
+
+step_goal(fact(Goal), Goal).
+step_goal(via(_, Goal), Goal).
 
 outcome(Derivation, inconsistent) :- memberchk(inconsistent(_, _, _), Derivation), !.
 outcome(Derivation, failed(underivable(Obs))) :- memberchk(underivable(Obs), Derivation), !.

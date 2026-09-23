@@ -107,4 +107,9 @@ test(core_vocabulary_item_with_two_templates_is_a_load_error,
     fixture(duplicate_template, Dir),
     check(Dir, _).
 
+test(head_variable_that_does_not_occur_in_the_body_is_a_load_error,
+     throws(theory_error(range_violation('W', claim(everything_whole))))) :-
+    fixture(range_violation, Dir),
+    check(Dir, _).
+
 :- end_tests(check).

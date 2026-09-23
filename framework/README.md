@@ -52,7 +52,7 @@ Files are read as terms, not consulted.
 - `Clause` is `Head` or `(Head :- Body)`; parenthesise a conjunctive body.
   Bodies are conjunctions of goals; every goal must resolve (see load
   errors), which rules out built-ins and negation. Every head variable
-  should occur in the body (not checked).
+  must occur in the body (see load errors).
 - `Status` is `required`, `provisional` or `untested`.
 - `DependsOn` lists the Claims the Phenomenon is written to test. A name
   that is not yet in the Core counts as `required` (red before green).
@@ -80,6 +80,8 @@ Files are read as terms, not consulted.
   example a `bridge/2` inside `phenomena/`.
 - `core_vocabulary_in_phenomenon(F/A, File)`: a Phenomenon fact or
   Observation uses Core vocabulary.
+- `range_violation(Var, Where)`: a Claim or Bridge rule head variable that
+  does not occur in the body (`Where` is `claim(Name)` or `bridge(Name)`).
 - `unresolved(F/A, Where)`: a Claim body goal that is no Claim or Bridge
   head; a Bridge body goal that is neither of those nor a fact some
   Phenomenon states; or a Phenomenon fact that no Bridge rule reads

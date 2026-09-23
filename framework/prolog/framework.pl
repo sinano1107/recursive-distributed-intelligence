@@ -10,9 +10,9 @@ load_theory(Dir) :-
     retractall(claim(_, _, _, _)), retractall(bridge(_, _, _)),
     retractall(phenomenon(_, _, _, _)), retractall(exclusion(_, _, _, _)),
     retractall(template(_, _)),
-    forall(theory_term(Dir, core, T, _), store_core(T)),
-    forall(theory_term(Dir, bridge, T, _), store_bridge(T)),
-    forall(theory_term(Dir, phenomena, T, File), store_phenomenon(T, File)),
+    forall(theory_term(Dir, core, T, Names, _), store_core(T, Names)),
+    forall(theory_term(Dir, bridge, T, Names, _), store_bridge(T, Names)),
+    forall(theory_term(Dir, phenomena, T, _, File), store_phenomenon(T, File)),
     validate_connectivity,
     validate_templates.
 
@@ -20,23 +20,41 @@ load_theory(Dir) :-
 allowed(core, claim). allowed(core, template). allowed(bridge, bridge).
 allowed(phenomena, phenomenon). allowed(phenomena, exclusion).
 
-theory_term(Dir, Sub, Term, File) :-
+theory_term(Dir, Sub, Term, VarNames, File) :-
     atomic_list_concat([Dir, '/', Sub, '/*.pl'], Pattern),
     expand_file_name(Pattern, Files),
     member(File, Files),
-    read_file_to_terms(File, Terms, []),
-    member(Term, Terms),
+    setup_call_cleanup(open(File, read, In), read_terms(In, Terms), close(In)),
+    member(Term-VarNames, Terms),
     functor(Term, Kind, _),
     (   allowed(Sub, Kind) -> true
     ;   throw(theory_error(misplaced(Kind, File)))
     ).
 
-store_core(claim(Name, Status, Clause)) :-
-    head_body(Clause, H, B), assertz(claim(Name, Status, H, B)).
-store_core(template(Head, Words)) :- assertz(template(Head, Words)).
+read_terms(In, Terms) :-
+    read_term(In, Term, [variable_names(VarNames)]),
+    (   Term == end_of_file -> Terms = []
+    ;   Terms = [Term-VarNames|Rest], read_terms(In, Rest)
+    ).
 
-store_bridge(bridge(Name, Clause)) :-
-    head_body(Clause, H, B), assertz(bridge(Name, H, B)).
+store_core(claim(Name, Status, Clause), VarNames) :-
+    head_body(Clause, H, B), range_restricted(H, B, VarNames, claim(Name)),
+    assertz(claim(Name, Status, H, B)).
+store_core(template(Head, Words), _) :- assertz(template(Head, Words)).
+
+store_bridge(bridge(Name, Clause), VarNames) :-
+    head_body(Clause, H, B), range_restricted(H, B, VarNames, bridge(Name)),
+    assertz(bridge(Name, H, B)).
+
+% Every head variable must occur in the body, or the ground closure could
+% not enumerate the atoms the rule stands for.
+range_restricted(Head, Body, VarNames, Where) :-
+    term_variables(Head, HeadVars), term_variables(Body, BodyVars),
+    (   member(V, HeadVars), \+ ( member(BV, BodyVars), BV == V )
+    ->  ( member(Name=V0, VarNames), V0 == V -> true ; Name = '_' ),
+        throw(theory_error(range_violation(Name, Where)))
+    ;   true
+    ).
 
 % Observation vocabulary must be disjoint from Core vocabulary: no fact or
 % expected Observation of a Phenomenon may use a functor that occurs in a Claim.

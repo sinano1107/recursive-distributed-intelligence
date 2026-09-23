@@ -64,4 +64,10 @@ test(depth_bound_hit_during_a_refusal_is_a_distinct_failure, timeout(30)) :-
     check(Dir, Verdicts),
     Verdicts == [verdict(never_finishes, failed(depth_exceeded(finished(never))))].
 
+test(derivation_through_no_dependent_claim_is_vacuous_and_never_pending) :-
+    fixture(lamps, Dir),
+    check(Dir, Verdicts),
+    memberchk(verdict(cheap_glow, failed(vacuous(glows_cheaply(kitchen)))), Verdicts),
+    memberchk(verdict(cheap_glow_provisional, failed(vacuous(glows_cheaply(kitchen)))), Verdicts).
+
 :- end_tests(check).

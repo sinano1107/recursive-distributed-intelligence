@@ -26,3 +26,9 @@ phenomenon(enchanted_attic_lamp, [lit_by_magic],                 % untested: exc
     [enchanted(attic)], [expect(glows(attic))]).
 phenomenon(enchanted_attic_lamp_by_power, [lit_when_powered_and_on], % untested claim can't help
     [enchanted(attic)], [expect(glows(attic))]).
+
+% Vacuous: derivable, but through no Claim the Phenomenon depends on.
+phenomenon(cheap_glow, [lit_when_powered_and_on],
+    [connected(kitchen)], [expect(glows_cheaply(kitchen))]).
+phenomenon(cheap_glow_provisional, [lit_when_bright_room],
+    [connected(kitchen)], [expect(glows_cheaply(kitchen))]).

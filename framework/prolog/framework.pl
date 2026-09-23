@@ -110,6 +110,7 @@ exclusion_outcome(Obs, Facts, Excluded, Outcome) :-
 
 outcome(Derivation, inconsistent) :- memberchk(inconsistent(_, _, _), Derivation), !.
 outcome(Derivation, failed(depth_exceeded(Obs))) :- memberchk(depth_exceeded(Obs), Derivation), !.
+outcome(Derivation, failed(vacuous(Obs))) :- memberchk(vacuous(Obs, _), Derivation), !.
 outcome(Derivation, failed(underivable(Obs))) :- memberchk(underivable(Obs), Derivation), !.
 outcome(Derivation, failed(unexpected(Obs))) :- memberchk(unexpected(Obs, _), Derivation), !.
 outcome(Derivation, refuses) :- forall(member(S, Derivation), S = refused(_)), !.
@@ -132,25 +133,32 @@ outcome(_, explains).
 max_depth(100).
 
 explains(Phenomenon, Derivation) :-
-    phenomenon(Phenomenon, _, Facts, Expectations),
+    phenomenon(Phenomenon, Dependencies, Facts, Expectations),
     closure(Facts, Closure, Completeness),
-    maplist(expectation_step(Closure, Completeness), Expectations, Derivation).
+    maplist(expectation_step(Closure, Completeness, Dependencies), Expectations, Derivation).
 
 % Negation convention: not(Obs) is the declared negation of Obs in
 % Observation vocabulary. A Phenomenon is inconsistent when both derive.
-expectation_step(Closure, _, Expectation, inconsistent(Obs, Trace, NegTrace)) :-
+expectation_step(Closure, _, _, Expectation, inconsistent(Obs, Trace, NegTrace)) :-
     arg(1, Expectation, Obs),
     negation(Obs, Neg),
     derived(Closure, Obs, Trace, _),
     derived(Closure, Neg, NegTrace, _), !.
-expectation_step(_, depth_exceeded, Expectation, depth_exceeded(Obs)) :- !,
+expectation_step(_, depth_exceeded, _, Expectation, depth_exceeded(Obs)) :- !,
     arg(1, Expectation, Obs).
-expectation_step(Closure, _, expect(Obs), derived(Obs, Trace)) :-
+% An expected Observation whose derivations pass through none of the
+% Claims the Phenomenon depends on is vacuous (a trivialising Bridge rule
+% or a fact restating the Observation), not explained.
+expectation_step(Closure, _, Dependencies, expect(Obs), Step) :-
+    derived(Closure, Obs, Trace, Items), !,
+    (   member(D, Dependencies), memberchk(claim(D), Items)
+    ->  Step = derived(Obs, Trace)
+    ;   Step = vacuous(Obs, Trace)
+    ).
+expectation_step(_, _, _, expect(Obs), underivable(Obs)).
+expectation_step(Closure, _, _, refuse(Obs), unexpected(Obs, Trace)) :-
     derived(Closure, Obs, Trace, _), !.
-expectation_step(_, _, expect(Obs), underivable(Obs)).
-expectation_step(Closure, _, refuse(Obs), unexpected(Obs, Trace)) :-
-    derived(Closure, Obs, Trace, _), !.
-expectation_step(_, _, refuse(Obs), refused(Obs)).
+expectation_step(_, _, _, refuse(Obs), refused(Obs)).
 
 negation(not(Obs), Obs) :- !.
 negation(Obs, not(Obs)).

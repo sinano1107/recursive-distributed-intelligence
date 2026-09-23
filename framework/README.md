@@ -60,7 +60,8 @@ directory (for example a `bridge/2` inside `phenomena/`) is a load error
   a load error `theory_error(core_vocabulary_in_phenomenon(F/A, File))`.
 - `Excluded` is `claim(Name)` or `Functor/Arity`. The test is violated when
   any derivation of the Observation passes through it (the Observation's own
-  goal counts).
+  goal counts). An Observation with no derivation at all yields `explains`
+  vacuously; the Phenomenon's own Verdict carries that failure.
 - `Words` in a Template is a list of atoms; variables are argument slots.
   Arguments must be atoms of one token, never a single capital letter (those
   are reserved for `'$VAR'(N)`, which renders as `A`, `B`, ...). Clause bodies
@@ -75,8 +76,8 @@ directory (for example a `bridge/2` inside `phenomena/`) is a load error
 - **Citation**: `[[claim_name]]` anywhere in a sentence. Headings (`#` lines)
   are ignored; sentences end at `.`, `!` or `?`; a sentence is substantive
   when it contains a letter. The prose's meaning is never checked.
-- **Status**: a failing test whose dependencies include a `required` (or
-  unknown) Claim yields `failed(Reason)`; one depending only on
-  `provisional` Claims yields `pending(Reason)`. `untested` Claims are
-  removed from the Core for derivation, and a test depending on one gets no
-  Verdict at all.
+- **Status**: a `failed(Reason)` outcome stays `failed` when the test's
+  dependencies include a `required` (or unknown) Claim, and becomes
+  `pending(Reason)` when they are all `provisional`; `inconsistent` and
+  `violates(_)` are never softened. `untested` Claims are removed from the
+  Core for derivation, and a test depending on one gets no Verdict at all.

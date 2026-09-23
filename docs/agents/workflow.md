@@ -46,7 +46,9 @@ Everything in the repo (Core, prose, tests, ADRs, glossaries, skills written her
 
 `/ponytail` is a standing mode that biases how work gets done; `/ponytail-review` is a one-shot pass over a diff. Neither substitutes for the other.
 
-The mode is chosen by the launcher, once per session (`claude-design` off, `claude-build` full); see [machine-setup.md](./machine-setup.md). Design sessions (`/grill-with-docs`, `/to-spec`) run off so YAGNI pressure does not kill options before they are weighed. Build sessions (`/to-tickets`, `/implement-rdi`) run full. If the plugin's ruleset is in context while you are grilling, stop and tell the user before going on.
+The mode is chosen by the launcher, once per session (`claude-design` off, `claude-build` full); see [machine-setup.md](./machine-setup.md). Design sessions (`/grill-with-docs`, `/to-spec`) run off so YAGNI pressure does not kill options before they are weighed. Build sessions run full.
+
+Which launcher an `/implement-rdi` session gets depends on the kind of issue. A **framework issue** starts as `claude-build`. A **theory slice** starts as `claude-design`, because its first stage is the phenomena grill; the skill switches to `/ponytail full` itself right before dispatching the implementation sub-agent. If the plugin's ruleset is in context while you are grilling, stop and tell the user before going on.
 
 ## Choosing the model
 

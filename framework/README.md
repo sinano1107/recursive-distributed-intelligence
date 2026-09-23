@@ -61,7 +61,8 @@ Files are read as terms, not consulted.
   functor occurring in any Claim, head or body.
 - `Excluded` is `claim(Name)` or `Functor/Arity`. The test is violated when
   any derivation of the Observation passes through it (the Observation's own
-  goal counts). An Observation with no derivation at all yields `explains`
+  goal counts, and so do derivations that revisit an atom, as through a
+  symmetric Claim). An Observation with no derivation at all yields `explains`
   vacuously; the Phenomenon's own Verdict carries that failure.
 - `Words` in a Template is a list of atoms; variables are argument slots.
   Clause bodies render as `... if ... and ...`; variables render as `A`,

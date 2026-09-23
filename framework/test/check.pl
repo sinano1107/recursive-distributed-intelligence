@@ -60,10 +60,11 @@ test(recursive_claims_terminate_with_exact_refusal_and_exclusion, timeout(10)) :
     memberchk(verdict(gear_holds_nothing, refuses), Verdicts),
     memberchk(verdict(nesting_without_whole, explains), Verdicts).
 
-test(depth_bound_hit_during_a_refusal_is_a_distinct_failure, timeout(30)) :-
+test(depth_bound_hit_during_a_refusal_or_exclusion_is_a_distinct_failure, timeout(30)) :-
     fixture(non_terminating, Dir),
     check(Dir, Verdicts),
-    Verdicts == [verdict(never_finishes, failed(depth_exceeded(finished(never))))].
+    Verdicts == [verdict(never_finishes, failed(depth_exceeded(finished(never)))),
+                 verdict(never_finishes_without_count, failed(depth_exceeded(finished(never))))].
 
 test(derivation_through_no_dependent_claim_is_vacuous_and_never_pending) :-
     fixture(lamps, Dir),

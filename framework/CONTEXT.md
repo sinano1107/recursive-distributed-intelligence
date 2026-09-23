@@ -49,7 +49,7 @@ A test asserting that a Derivation must not pass through a named Claim or vocabu
 _Avoid_: guardrail, negative test
 
 **Verdict**:
-The outcome of checking one Phenomenon: `explains` (every expected Observation is derivable), `refuses` (an Observation the theory is expected to reject is not derivable), or `inconsistent` (the Core with the Phenomenon's facts contradicts itself). An Exclusion test yields `explains` or a named violation.
+The outcome of checking one Phenomenon: `explains` (every expected Observation is derivable through at least one Claim the Phenomenon depends on), `refuses` (an Observation the theory is expected to reject is not derivable), `inconsistent` (the Core with the Phenomenon's facts contradicts itself), or `failed` with a reason. A Derivation that reaches an Observation without passing through any depended-on Claim is `vacuous`, a failure: the Phenomenon did not test the theory. An Exclusion test yields `explains` or a named violation. A Verdict is never issued from an unfinished search; running out of search depth is itself a distinct failure.
 _Avoid_: result, pass/fail
 
 ### Rendering

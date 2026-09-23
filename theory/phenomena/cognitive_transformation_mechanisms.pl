@@ -5,7 +5,7 @@
 %        feeds_back(Y, X), criterion(S, T), judges_under(E, T), stores(X, R).
 % Observations: turns(S, In, Out), carries_out(S, T), is_mechanism(X), serves_as_mechanism(X, S),
 %               cognitive_whole(X), shared_state(R, S), nested(X, S), recurrent(S),
-%               revisable(S).
+%               recurrent_whole(S), revisable(S).
 
 % E1: a team reviews what no member reviews; a person is not the privileged
 % minimum unit. The criterion enters the working: alice takes the brief up.
@@ -55,14 +55,24 @@ phenomenon(critic_in_a_studio,
      criterion(studio, buildability), consumes(planner, buildability)],
     [expect(serves_as_mechanism(critic, studio)), expect(recurrent(studio))]).
 
-% E4b: the provisional claim that recurrence supports revision, tested on
-% its own so that a failure stays pending.
+% E4b: the provisional claim that a recurrent cognitive system can revise,
+% tested on its own so that a failure stays pending.
 phenomenon(studio_can_revise,
     [revision_when_recurrent],
     [belongs(critic, studio), belongs(planner, studio),
      transforms(critic, proposal, review), consumes(planner, review),
-     transforms(planner, review, proposal2), feeds_back(planner, critic)],
+     transforms(planner, review, proposal2), feeds_back(planner, critic),
+     criterion(studio, buildability), consumes(planner, buildability)],
     [expect(revisable(studio))]).
+
+% R12: a loop that adds random numbers is recurrent, but nothing directs
+% it: not a recurrent cognitive system, and it cannot revise.
+phenomenon(random_adder_loop,
+    [recurrent_when_output_returns, recurrent_cognitive_when_directed, revision_when_recurrent],
+    [belongs(rng, loop), belongs(adder, loop),
+     transforms(rng, seed, number), consumes(adder, number),
+     transforms(adder, number, sum), feeds_back(adder, rng)],
+    [expect(recurrent(loop)), refuse(recurrent_whole(loop)), refuse(revisable(loop))]).
 
 % E5: a mechanism belongs to no named system, but its taker does: the client
 % transforms the translation inside a firm directed by the deal. Nobody
@@ -229,11 +239,11 @@ phenomenon(team_directed_by_an_editor,
 % mechanism, and the writing is a recurrent cognitive system.
 phenomenon(author_rereads_own_draft,
     [cognitive_when_taken_up_into_a_directed_working, mechanism_when_it_transforms_cognitively,
-     whole_when_it_has_a_mechanism, recurrent_when_output_returns],
+     whole_when_it_has_a_mechanism, recurrent_when_output_returns, recurrent_cognitive_when_directed],
     [belongs(author, writing), transforms(author, thoughts, draft),
      consumes(author, draft), transforms(author, draft, revision), feeds_back(author, author),
      criterion(writing, clarity), consumes(author, clarity)],
-    [expect(is_mechanism(author)), expect(cognitive_whole(writing)), expect(recurrent(writing))]).
+    [expect(is_mechanism(author)), expect(cognitive_whole(writing)), expect(recurrent_whole(writing))]).
 
 % E14: a system transforms what its chain transforms and nothing that one
 % component transforms alone; the system's transformation is the integration.

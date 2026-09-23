@@ -2,7 +2,7 @@
 % transformation/3, takes_up/2, returns_to/2, under_criterion/2, retains/2,
 % cognitive_transformation/3, mechanism/1, mechanism_in/2, cognitive_system/1,
 % evaluator_of/2, directed_by/2, realises_intelligence/2, shared_in/2,
-% nested_in/2, recurrent_system/1, can_revise/1.
+% nested_in/2, recurrent_system/1, recurrent_cognitive_system/1, can_revise/1.
 
 % A system transforms what a chain of its components transforms along
 % uptake, and nothing that one component transforms alone: the system's
@@ -81,20 +81,29 @@ claim(shared_state_when_stored_and_consumed, required,
 claim(nested_when_whole_is_mechanism, required,
     (nested_in(X, S) :- cognitive_system(X), mechanism_in(X, S))).
 
-% Recurrence (temporal re-entry): the component that takes up a mechanism's
-% output and transforms it feeds its output back into that mechanism.
+% Recurrence (temporal re-entry): the component that takes up a component's
+% output and transforms it feeds its output back into that component.
+% Structural: a loop that adds random numbers is recurrent.
 claim(recurrent_when_output_returns, required,
     (recurrent_system(S) :-
         component_of(X, S), transformation(X, _, Out),
         component_of(Y, S), takes_up(Y, Out), transformation(Y, Out, _),
         returns_to(Y, X))).
 
+% A recurrent cognitive system is a recurrent system that is a cognitive
+% system: the re-entry happens inside a working that a criterion directs
+% (issue #16).
+claim(recurrent_cognitive_when_directed, required,
+    (recurrent_cognitive_system(S) :- recurrent_system(S), cognitive_system(S))).
+
 % Recurrence supports revision: a mechanism's later transformation acts on
-% the response to its earlier output. Provisional: the vault hedges it
-% (recurrence can fail or become costly, and is not a proven necessary
-% condition), and the Claim adds little beyond the loop's existence.
+% the response to its earlier output. Only a recurrent cognitive system can
+% revise; a loop that nothing directs merely re-enters. Provisional: the
+% vault hedges it (recurrence can fail or become costly, and is not a
+% proven necessary condition), and the Claim adds little beyond the loop's
+% existence.
 claim(revision_when_recurrent, provisional,
-    (can_revise(S) :- recurrent_system(S))).
+    (can_revise(S) :- recurrent_cognitive_system(S))).
 
 template(component_of(X, S), [X, is, a, component, of, S]).
 template(transformation(X, In, Out), [X, transforms, In, into, Out]).
@@ -112,4 +121,5 @@ template(realises_intelligence(S, T), [S, realises, intelligence, under, the, cr
 template(shared_in(R, S), [R, is, a, coupling, surface, within, S]).
 template(nested_in(X, S), [X, is, nested, in, S]).
 template(recurrent_system(S), [S, is, a, recurrent, system]).
+template(recurrent_cognitive_system(S), [S, is, a, recurrent, cognitive, system]).
 template(can_revise(S), [S, can, revise, through, recurrence]).

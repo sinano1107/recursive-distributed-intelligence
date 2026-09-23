@@ -18,4 +18,9 @@ test(refusal_when_expected_observation_is_not_derivable) :-
     explains(hall_lamp_unplugged, Derivation),
     Derivation == [refused(glows(hall))].
 
+test(inconsistent_when_an_observation_and_its_negation_both_derive) :-
+    explains(flickering_lamp, [inconsistent(glows(cellar), Trace, NegTrace)]),
+    memberchk(via(claim(lit_when_powered_and_on), _), Trace),
+    memberchk(via(claim(dark_when_off), _), NegTrace).
+
 :- end_tests(explains).

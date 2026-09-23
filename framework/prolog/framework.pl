@@ -33,10 +33,20 @@ explains(Phenomenon, Derivation) :-
     phenomenon(Phenomenon, _, Facts, Expectations),
     maplist(expectation_step(Facts), Expectations, Derivation).
 
+% Negation convention: not(Obs) is the declared negation of Obs in
+% Observation vocabulary. A Phenomenon is inconsistent when both derive.
+expectation_step(Facts, Expectation, inconsistent(Obs, Trace, NegTrace)) :-
+    arg(1, Expectation, Obs),
+    negation(Obs, Neg),
+    once(derive(Obs, Facts, Trace)),
+    once(derive(Neg, Facts, NegTrace)), !.
 expectation_step(Facts, expect(Obs), derived(Obs, Trace)) :-
     once(derive(Obs, Facts, Trace)).
 expectation_step(Facts, refuse(Obs), refused(Obs)) :-
     \+ derive(Obs, Facts, _).
+
+negation(not(Obs), Obs) :- !.
+negation(Obs, not(Obs)).
 
 derive(true, _, []) :- !.
 derive((A, B), Facts, Trace) :- !,

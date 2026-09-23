@@ -34,11 +34,11 @@ One representation or state turned into another by some component. Not every tra
 _Avoid_: computation, processing step
 
 **Cognitive transformation** (`cognitive_transformation/3`):
-A transformation whose output a component takes up and transforms in turn. Being cognitive is a relation to a taker, not a property of the transformation itself, and the relation has no boundary: a taker anywhere makes it cognitive. It need not reduce information and need not succeed. The taker may be the same component at a later time: the self is divided along time.
-_Avoid_: compression, useful transformation, intrinsic property
+A transformation whose output a component of a directed system takes up and transforms in turn: its uptake reaches a working that a criterion directs. Being cognitive is a relation to a taker, not a property of the transformation itself. The transforming side belongs to no system in particular; the taker does, and that system must be directed. It need not reduce information and need not succeed. The taker may be the same component at a later time: the self is divided along time.
+_Avoid_: compression, useful transformation, intrinsic property, context-sensitive
 
 **Cognitive transformation mechanism** (`mechanism/1`; Observation `is_mechanism/1`):
-Whatever performs a cognitive transformation. It needs no system to belong to and is silent about its own intelligence. It serves as a mechanism in a particular system (`mechanism_in/2`; Observation `serves_as_mechanism/2`) when a component of that system takes its output up and transforms it: that is the boundary-relative role, and a taker inside the boundary that does nothing with the output does not confer it.
+Whatever performs a cognitive transformation. It needs no system to belong to and is silent about its own intelligence. It serves as a mechanism in a particular system (`mechanism_in/2`; Observation `serves_as_mechanism/2`) when a component of that system takes its output up and transforms it and a criterion directs that system: that is the boundary-relative role. A taker inside the boundary that does nothing with the output does not confer it, and neither does a system that nothing directs. Mechanism-hood extends to whatever a directed system takes up, the environment included, when the boundary is drawn so.
 _Avoid_: agent, processor, node, sub-intelligence
 
 **Coupling surface** (`shared_in/2`; Observation `shared_state/2`):
@@ -46,8 +46,8 @@ A state that one component passively holds and another component takes up. Holdi
 _Avoid_: memory, channel, interface
 
 **Organised cognitive system** (`cognitive_system/1`; Observation `cognitive_whole/1`):
-A system in which at least one component serves as a cognitive transformation mechanism. Organisation alone makes one; no criterion and no recurrence is required.
-_Avoid_: collective, group mind, intelligent system
+A system in which at least one component serves as a cognitive transformation mechanism, which requires some criterion to direct the system. A system that merely transforms as a system (its components' transformations chain along uptake, Observation `turns/3`) is organised but not cognitive. No recurrence is required.
+_Avoid_: collective, group mind, intelligent system, organised system (for the undirected case: say "transforms as a system")
 
 **Criterion** (`under_criterion/2`; Observation `criterion/2`):
 What a system's transitions are judged effective by. A task, a goal, a value gradient or an evaluator's standard can supply one; the Core does not say where it comes from. Attributed to a system by whoever draws its boundary; attribution alone directs nothing, and a criterion is not an obligation.
@@ -58,17 +58,21 @@ A criterion directs a system when it enters the working: a component takes the c
 _Avoid_: agency, motivation, alignment
 
 **Intelligence** (`realises_intelligence/2`; Observation `carries_out/2`):
-The working of an organised cognitive system under a criterion that directs it. Not a capacity the system owns and not an attribution. The Core states only the two conditions; the vault's grading of intelligence is not formalised.
+The working of an organised cognitive system under the criterion that directs it. Not a capacity the system owns and not an attribution. Judged at a boundary: a mechanism in an intelligent system need not realise intelligence at its own boundary, so intelligence does not descend to the components. The Core states only the two conditions; the vault's grading of intelligence is not formalised.
 _Avoid_: capability, capacity, ability, IQ, scalar intelligence
 
 **Recurrence** (`recurrent_system/1`; Observation `recurrent/1`):
-Temporal re-entry: the component that takes up a mechanism's output and transforms it feeds its own output back into that mechanism. Distinct from recursive nesting.
+Temporal re-entry: the component that takes up a component's output and transforms it feeds its own output back into that component. Structural: a loop that adds random numbers is recurrent. Distinct from recursive nesting.
 _Avoid_: recursion, loop
 
+**Recurrent cognitive system** (`recurrent_cognitive_system/1`; Observation `recurrent_whole/1`):
+A recurrent system that is an organised cognitive system: the re-entry happens inside a working that a criterion directs.
+_Avoid_: feedback loop, control loop
+
 **Revision through recurrence** (`can_revise/1`, provisional; Observation `revisable/1`):
-A recurrent system can revise: a mechanism's later transformation acts on the response to its earlier output, so no state at that mechanism is final. Whether revision happens, corrects, or is affordable is not asserted.
+A recurrent cognitive system can revise: a mechanism's later transformation acts on the response to its earlier output, so no state at that mechanism is final. A recurrent system that nothing directs merely re-enters. Whether revision happens, corrects, or is affordable is not asserted.
 _Avoid_: self-correction, learning, convergence
 
 **Recursive nesting** (`nested_in/2`; Observation `nested/2`):
-Scale-relative composition: an organised cognitive system at one boundary that serves as a cognitive transformation mechanism at a larger boundary. The same entity can be a system at one scale and a mechanism at another.
+Scale-relative composition: an organised cognitive system at one boundary that serves as a cognitive transformation mechanism at a larger boundary. The same entity can be a system at one scale and a mechanism at another. Both boundaries must be directed: a mechanism in a larger system that nothing directs at its own scale is not nested, only a mechanism.
 _Avoid_: recurrence, hierarchy, containment, part-whole

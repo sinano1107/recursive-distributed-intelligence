@@ -267,10 +267,12 @@ merge(d(Head, Trace, Items), C0-Changed0, C-Changed) :-
 % ---- Prose shell: every substantive sentence cites a Claim ---------------
 %
 % Prose files are Markdown under <theory>/prose/. A Citation is [[claim_name]].
-% Headings are ignored; the rest is split into sentences at . ! and ?.
-% A sentence is substantive when it contains a letter. Meaning is never
-% checked, only that each substantive sentence cites at least one Claim
-% that exists in the Core.
+% Headings are ignored; the rest is split into sentences: . ! or ? ends
+% one only at the end of the text or before whitespace and a character
+% that is not a lowercase letter, so "e.g. a gear" stays in its sentence.
+% A sentence is substantive
+% when it contains a letter. Meaning is never checked, only that each
+% substantive sentence cites at least one Claim that exists in the Core.
 
 cites_core(ProseFile) :-
     file_directory_name(ProseFile, ProseDir),
@@ -280,8 +282,20 @@ cites_core(ProseFile) :-
     split_string(Text, "\n", "", Lines),
     exclude([L]>>string_concat("#", _, L), Lines, Body),
     atomic_list_concat(Body, ' ', Joined),
-    split_string(Joined, ".!?", " \t", Sentences),
+    string_codes(Joined, Codes),
+    phrase(sentences(Sentences), Codes),
     forall(( member(S, Sentences), substantive(S) ), cited(S, ProseFile)).
+
+sentences([S|Ss]) --> sentence(Codes), { Codes \== [] }, !,
+    { string_codes(S0, Codes), normalize_space(string(S), S0) }, sentences(Ss).
+sentences([]) --> [].
+
+sentence([]) --> [C], { memberchk(C, `.!?`) }, \+ \+ ends_sentence, !.
+sentence([C|Cs]) --> [C], !, sentence(Cs).
+sentence([]) --> [].
+
+ends_sentence --> blanks, eos.
+ends_sentence --> blank, blanks, [L], { \+ code_type(L, lower) }.
 
 substantive(Sentence) :-
     string_code(_, Sentence, C), code_type(C, alpha), !.

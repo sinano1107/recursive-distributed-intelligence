@@ -1,4 +1,4 @@
-:- module(framework, [load_theory/1, explains/2]).
+:- module(framework, [load_theory/1, check/2, explains/2]).
 
 :- dynamic claim/4, bridge/3, phenomenon/4.
 
@@ -26,6 +26,20 @@ store_bridge(bridge(Name, Clause)) :-
 
 head_body((H :- B), H, B) :- !.
 head_body(H, H, true).
+
+% ---- Checking: one Verdict per test -----------------------------------------
+
+check(Dir, Verdicts) :-
+    load_theory(Dir),
+    findall(verdict(Name, Outcome),
+            ( phenomenon(Name, _, _, _),
+              explains(Name, Derivation),
+              outcome(Derivation, Outcome) ),
+            Verdicts).
+
+outcome(Derivation, inconsistent) :- memberchk(inconsistent(_, _, _), Derivation), !.
+outcome(Derivation, refuses) :- forall(member(S, Derivation), S = refused(_)), !.
+outcome(_, explains).
 
 % ---- Derivation: a meta-interpreter over Core + Bridge + Facts ------------
 

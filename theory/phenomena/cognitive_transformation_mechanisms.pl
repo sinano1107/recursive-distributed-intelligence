@@ -1,29 +1,29 @@
 % Observation vocabulary.
 % Facts: belongs(X, S), transforms(X, In, Out), consumes(Y, Out),
-%        feeds_back(Y, X), task(S, T), stores(X, R).
+%        feeds_back(Y, X), task(S, T), judges_under(E, T), stores(X, R).
 % Observations: turns(S, In, Out), carries_out(S, T), is_mechanism(X), serves_as_mechanism(X, S),
 %               cognitive_whole(X), shared_state(R, S), nested(X, S), recurrent(S),
 %               revisable(S).
 
 % E1: a team reviews what no member reviews; a person is not the privileged
-% minimum unit.
+% minimum unit. The task enters the working: alice takes the brief up.
 phenomenon(team_reviews_what_no_member_reviews,
-    [intelligence_when_organised_and_tasked, whole_when_it_has_a_mechanism,
-     mechanism_when_its_output_is_consumed],
+    [intelligence_when_organised_and_directed, directed_when_component_takes_up_criterion,
+     whole_when_it_has_a_mechanism, mechanism_when_its_output_is_consumed],
     [belongs(alice, team), belongs(bob, team),
      transforms(alice, draft, critique), consumes(bob, critique),
      transforms(bob, critique, revision), feeds_back(bob, alice),
-     task(team, review)],
+     task(team, review), consumes(alice, review)],
     [expect(carries_out(team, review)), refuse(carries_out(alice, review))]).
 
 % E2: human + LLM + CI; no fact ascribes intelligence to any component.
 phenomenon(human_llm_ci_composite,
-    [intelligence_when_organised_and_tasked, whole_when_it_has_a_mechanism,
+    [intelligence_when_organised_and_directed, whole_when_it_has_a_mechanism,
      mechanism_when_its_output_is_consumed],
     [belongs(llm, composite), belongs(dev, composite), belongs(ci, composite),
      transforms(llm, spec, patch), consumes(dev, patch), consumes(ci, patch),
      transforms(dev, patch, verdict), transforms(ci, patch, report), consumes(dev, report),
-     feeds_back(dev, llm), task(composite, shipping)],
+     feeds_back(dev, llm), task(composite, shipping), consumes(dev, shipping)],
     [expect(carries_out(composite, shipping)), refuse(carries_out(llm, shipping))]).
 
 % E3: nesting; the same entity is a whole at one boundary and a mechanism at
@@ -67,7 +67,7 @@ phenomenon(design_loop_can_revise,
 
 % R1: identical uncoupled processors; more components are not better.
 phenomenon(uncoupled_processors,
-    [intelligence_when_organised_and_tasked, whole_when_it_has_a_mechanism,
+    [intelligence_when_organised_and_directed, whole_when_it_has_a_mechanism,
      mechanism_when_its_output_is_consumed],
     [belongs(p1, farm), belongs(p2, farm), belongs(p3, farm),
      transforms(p1, input, out1), transforms(p2, input, out2), transforms(p3, input, out3),
@@ -95,7 +95,7 @@ phenomenon(unconsumed_transformation,
 
 % R4: coupled but no task; direction is supplied from outside.
 phenomenon(coupled_but_undirected,
-    [whole_when_it_has_a_mechanism, intelligence_when_organised_and_tasked,
+    [whole_when_it_has_a_mechanism, intelligence_when_organised_and_directed,
      mechanism_when_its_output_is_consumed],
     [belongs(alice, team), belongs(bob, team),
      transforms(alice, draft, critique), consumes(bob, critique),
@@ -145,19 +145,19 @@ phenomenon(painting_as_coupling_surface,
 % states that the pipeline transforms; the chain derives it.
 phenomenon(pipeline_as_mechanism_in_a_larger_system,
     [transformation_of_component_is_of_system, transformation_composes_along_uptake,
-     nested_when_whole_is_mechanism, intelligence_when_organised_and_tasked],
+     nested_when_whole_is_mechanism, intelligence_when_organised_and_directed],
     [belongs(decoder, pipeline), belongs(checksum, pipeline),
      transforms(decoder, file, pixels), consumes(checksum, pixels), transforms(checksum, pixels, digest),
      belongs(pipeline, backup_system), belongs(verifier, backup_system),
      consumes(verifier, digest), transforms(verifier, digest, verdict),
-     task(backup_system, safe_storage)],
+     task(backup_system, safe_storage), consumes(verifier, safe_storage)],
     [expect(turns(pipeline, file, digest)), expect(is_mechanism(pipeline)),
      expect(nested(pipeline, backup_system)), expect(carries_out(backup_system, safe_storage)),
      refuse(carries_out(pipeline, safe_storage))]).
 
 % R6/R7: the same pipeline alone: organised, undirected, not recurrent.
 phenomenon(pipeline_alone,
-    [whole_when_it_has_a_mechanism, intelligence_when_organised_and_tasked, recurrent_when_output_returns],
+    [whole_when_it_has_a_mechanism, intelligence_when_organised_and_directed, recurrent_when_output_returns],
     [belongs(decoder, pipeline), belongs(checksum, pipeline),
      transforms(decoder, file, pixels), consumes(checksum, pixels), transforms(checksum, pixels, digest)],
     [expect(cognitive_whole(pipeline)), refuse(carries_out(pipeline, integrity)), refuse(recurrent(pipeline))]).
@@ -166,3 +166,33 @@ phenomenon(pipeline_cannot_revise,
     [belongs(decoder, pipeline), belongs(checksum, pipeline),
      transforms(decoder, file, pixels), consumes(checksum, pixels), transforms(checksum, pixels, digest)],
     [refuse(revisable(pipeline))]).
+
+% R8/E11: a task that is only a label does not direct the pipeline; a
+% comparator that takes the criterion up does.
+phenomenon(pipeline_with_a_label,
+    [intelligence_when_organised_and_directed, directed_when_component_takes_up_criterion,
+     whole_when_it_has_a_mechanism],
+    [belongs(decoder, pipeline), belongs(checksum, pipeline),
+     transforms(decoder, file, pixels), consumes(checksum, pixels), transforms(checksum, pixels, digest),
+     task(pipeline, integrity)],
+    [expect(cognitive_whole(pipeline)), refuse(carries_out(pipeline, integrity))]).
+phenomenon(pipeline_with_a_comparator,
+    [intelligence_when_organised_and_directed, directed_when_component_takes_up_criterion],
+    [belongs(decoder, pipeline), belongs(checksum, pipeline), belongs(comparator, pipeline),
+     transforms(decoder, file, pixels), consumes(checksum, pixels), transforms(checksum, pixels, digest),
+     consumes(comparator, digest), transforms(comparator, digest, verdict),
+     task(pipeline, integrity), consumes(comparator, integrity)],
+    [expect(carries_out(pipeline, integrity))]).
+
+% E12: direction supplied from outside. No member takes the criterion up;
+% an editor judging under it takes the team's revision up and replies to
+% alice. The team's transformation is derived by composition.
+phenomenon(team_directed_by_an_editor,
+    [intelligence_when_organised_and_directed, directed_when_evaluator_returns,
+     transformation_composes_along_uptake],
+    [belongs(alice, team), belongs(bob, team),
+     transforms(alice, draft, critique), consumes(bob, critique),
+     transforms(bob, critique, revision), feeds_back(bob, alice),
+     task(team, publication), judges_under(editor, publication),
+     consumes(editor, revision), transforms(editor, revision, notes), feeds_back(editor, alice)],
+    [expect(carries_out(team, publication))]).

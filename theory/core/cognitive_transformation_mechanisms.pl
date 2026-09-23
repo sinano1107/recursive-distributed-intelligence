@@ -1,8 +1,8 @@
 % Cognitive transformation mechanisms. Core vocabulary: component_of/2,
 % transformation/3, takes_up/2, returns_to/2, task_criterion/2, retains/2,
 % cognitive_transformation/3, mechanism/1, mechanism_in/2, cognitive_system/1,
-% realises_intelligence/2, shared_in/2, nested_in/2, recurrent_system/1,
-% can_revise/1.
+% evaluator_of/2, directed_by/2, realises_intelligence/2, shared_in/2,
+% nested_in/2, recurrent_system/1, can_revise/1.
 
 % A system transforms what its components transform, and what a chain of
 % them transforms along uptake. So a system's transformation at a larger
@@ -37,10 +37,21 @@ claim(mechanism_when_its_output_is_consumed, required,
 claim(whole_when_it_has_a_mechanism, required,
     (cognitive_system(S) :- mechanism_in(_, S))).
 
-% Intelligence is the working of an organised system under a task criterion
-% supplied to it, not a capacity the system owns.
-claim(intelligence_when_organised_and_tasked, required,
-    (realises_intelligence(S, T) :- cognitive_system(S), task_criterion(S, T))).
+% Direction is supplied, not labelled: a criterion directs a system when it
+% enters the working, either because a component takes the criterion up or
+% because an evaluator judging under it takes the system's output up and its
+% response returns into the system. Neither needs an internal goal.
+claim(directed_when_component_takes_up_criterion, required,
+    (directed_by(S, T) :- task_criterion(S, T), component_of(X, S), takes_up(X, T))).
+claim(directed_when_evaluator_returns, required,
+    (directed_by(S, T) :-
+        task_criterion(S, T), evaluator_of(E, T), transformation(S, _, Out),
+        takes_up(E, Out), returns_to(E, X), component_of(X, S))).
+
+% Intelligence is the working of an organised system under a criterion that
+% directs it, not a capacity the system owns and not a label.
+claim(intelligence_when_organised_and_directed, required,
+    (realises_intelligence(S, T) :- cognitive_system(S), directed_by(S, T))).
 
 % Passive holding is a coupling surface, not a mechanism.
 claim(shared_state_when_stored_and_consumed, required,
@@ -71,6 +82,8 @@ template(transformation(X, In, Out), [X, transforms, In, into, Out]).
 template(takes_up(Y, R), [Y, takes, R, as, input]).
 template(returns_to(Y, X), [Y, feeds, its, output, back, into, X]).
 template(task_criterion(S, T), [S, is, given, the, task, T]).
+template(evaluator_of(E, T), [E, judges, under, the, criterion, T]).
+template(directed_by(S, T), [S, is, directed, by, the, criterion, T]).
 template(retains(X, R), [X, passively, holds, R]).
 template(cognitive_transformation(X, In, Out), [X, performs, a, cognitive, transformation, of, In, into, Out]).
 template(mechanism(X), [X, is, a, cognitive, transformation, mechanism]).

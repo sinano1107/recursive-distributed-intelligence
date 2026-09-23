@@ -35,6 +35,8 @@ explains(Phenomenon, Derivation) :-
 
 expectation_step(Facts, expect(Obs), derived(Obs, Trace)) :-
     once(derive(Obs, Facts, Trace)).
+expectation_step(Facts, refuse(Obs), refused(Obs)) :-
+    \+ derive(Obs, Facts, _).
 
 derive(true, _, []) :- !.
 derive((A, B), Facts, Trace) :- !,

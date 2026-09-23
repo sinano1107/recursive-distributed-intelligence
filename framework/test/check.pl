@@ -50,4 +50,13 @@ test(bridge_rule_inside_a_phenomenon_file_is_a_load_error,
     fixture(bridge_in_phenomenon, Dir),
     check(Dir, _).
 
+test(recursive_claims_terminate_with_exact_refusal_and_exclusion, timeout(10)) :-
+    fixture(nesting, Dir),
+    check(Dir, Verdicts),
+    memberchk(verdict(gear_in_engine_in_car, explains), Verdicts),
+    memberchk(verdict(tooth_in_gear_in_engine_in_car, explains), Verdicts),
+    memberchk(verdict(car_is_unit, explains), Verdicts),
+    memberchk(verdict(gear_holds_nothing, refuses), Verdicts),
+    memberchk(verdict(nesting_without_whole, explains), Verdicts).
+
 :- end_tests(check).

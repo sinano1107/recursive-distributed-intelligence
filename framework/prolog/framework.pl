@@ -95,17 +95,12 @@ status_outcome(_, Outcome, Outcome).
 
 % An Exclusion test is violated when any Derivation of Obs passes through
 % the excluded Claim (claim(Name)) or vocabulary item (Functor/Arity).
-exclusion_outcome(Obs, Facts, Excluded, violates(Excluded)) :-
-    derive(Obs, Facts, Trace),
-    passes_through(Trace, Excluded), !.
-exclusion_outcome(_, _, _, explains).
-
-passes_through(Trace, claim(Name)) :- memberchk(via(claim(Name), _), Trace).
-passes_through(Trace, F/A) :-
-    member(Step, Trace), step_goal(Step, Goal), functor(Goal, F, A), !.
-
-step_goal(fact(Goal), Goal).
-step_goal(via(_, Goal), Goal).
+exclusion_outcome(Obs, Facts, Excluded, Outcome) :-
+    closure(Facts, Closure),
+    (   derived(Closure, Obs, _, Items), memberchk(Excluded, Items)
+    ->  Outcome = violates(Excluded)
+    ;   Outcome = explains
+    ).
 
 outcome(Derivation, inconsistent) :- memberchk(inconsistent(_, _, _), Derivation), !.
 outcome(Derivation, failed(underivable(Obs))) :- memberchk(underivable(Obs), Derivation), !.
@@ -113,38 +108,85 @@ outcome(Derivation, failed(unexpected(Obs))) :- memberchk(unexpected(Obs, _), De
 outcome(Derivation, refuses) :- forall(member(S, Derivation), S = refused(_)), !.
 outcome(_, explains).
 
-% ---- Derivation: a meta-interpreter over Core + Bridge + Facts ------------
+% ---- Derivation: bottom-up closure of Core + Bridge rules over the Facts --
+%
+% closure(Facts, Closure): Closure holds d(Atom, Trace, Items) for every
+% ground atom derivable from the Facts: one Derivation trace (the first
+% found, nested; flatten/2 gives the step list) and the set of every Claim,
+% Bridge rule and vocabulary item that occurs in any derivation of it.
+% Iteration k adds the atoms of derivation depth k, so a theory without
+% function symbols always reaches a fixpoint and refusals are exact.
 
 explains(Phenomenon, Derivation) :-
     phenomenon(Phenomenon, _, Facts, Expectations),
-    maplist(expectation_step(Facts), Expectations, Derivation).
+    closure(Facts, Closure),
+    maplist(expectation_step(Closure), Expectations, Derivation).
 
 % Negation convention: not(Obs) is the declared negation of Obs in
 % Observation vocabulary. A Phenomenon is inconsistent when both derive.
-expectation_step(Facts, Expectation, inconsistent(Obs, Trace, NegTrace)) :-
+expectation_step(Closure, Expectation, inconsistent(Obs, Trace, NegTrace)) :-
     arg(1, Expectation, Obs),
     negation(Obs, Neg),
-    once(derive(Obs, Facts, Trace)),
-    once(derive(Neg, Facts, NegTrace)), !.
-expectation_step(Facts, expect(Obs), derived(Obs, Trace)) :-
-    once(derive(Obs, Facts, Trace)), !.
+    derived(Closure, Obs, Trace, _),
+    derived(Closure, Neg, NegTrace, _), !.
+expectation_step(Closure, expect(Obs), derived(Obs, Trace)) :-
+    derived(Closure, Obs, Trace, _), !.
 expectation_step(_, expect(Obs), underivable(Obs)).
-expectation_step(Facts, refuse(Obs), unexpected(Obs, Trace)) :-
-    once(derive(Obs, Facts, Trace)), !.
+expectation_step(Closure, refuse(Obs), unexpected(Obs, Trace)) :-
+    derived(Closure, Obs, Trace, _), !.
 expectation_step(_, refuse(Obs), refused(Obs)).
 
 negation(not(Obs), Obs) :- !.
 negation(Obs, not(Obs)).
 
-derive(true, _, []) :- !.
-derive((A, B), Facts, Trace) :- !,
-    derive(A, Facts, TA), derive(B, Facts, TB), append(TA, TB, Trace).
-derive(G, Facts, [fact(G)]) :- member(G, Facts).
-derive(G, Facts, [via(bridge(Name), G)|Trace]) :-
-    bridge(Name, G, Body), derive(Body, Facts, Trace).
-derive(G, Facts, [via(claim(Name), G)|Trace]) :-
-    claim(Name, Status, G, Body), Status \== untested,
-    derive(Body, Facts, Trace).
+derived(Closure, Obs, Trace, Items) :-
+    member(d(Obs, Nested, Items), Closure), !,
+    flatten(Nested, Trace).
+
+closure(Facts, Closure) :-
+    findall(d(F, [fact(F)], [Fun/Ar]),
+            ( member(F, Facts), functor(F, Fun, Ar) ), Init),
+    iterate(Init, Closure).
+
+iterate(C0, C) :-
+    findall(New, instance(C0, New), News),
+    foldl(merge, News, C0-false, C1-Changed),
+    (   Changed == false -> C = C1
+    ;   iterate(C1, C)
+    ).
+
+% One application of a rule to atoms already in the closure. An atom that
+% is already known contributes only its Items; its Trace is never rebuilt.
+instance(C, d(Head, Trace, Items)) :-
+    rule(Name, Head, Body),
+    body_instance(Body, C, BodyTrace, BodyItems),
+    functor(Head, F, A),
+    list_to_ord_set([Name, F/A], Own),
+    ord_union(Own, BodyItems, Items),
+    (   memberchk(d(Head, _, _), C)
+    ->  Trace = known
+    ;   Trace = [via(Name, Head), BodyTrace]
+    ).
+
+rule(claim(Name), Head, Body) :- claim(Name, Status, Head, Body), Status \== untested.
+rule(bridge(Name), Head, Body) :- bridge(Name, Head, Body).
+
+body_instance(true, _, [], []) :- !.
+body_instance((A, B), C, [TA, TB], Items) :- !,
+    body_instance(A, C, TA, IA),
+    body_instance(B, C, TB, IB),
+    ord_union(IA, IB, Items).
+body_instance(Goal, C, Trace, Items) :- member(d(Goal, Trace, Items), C).
+
+merge(d(Head, Trace, Items), C0-Changed0, C-Changed) :-
+    (   select(d(Head, Trace0, Items0), C0, Rest)
+    ->  ord_union(Items0, Items, Items1),
+        (   Items1 == Items0
+        ->  C = C0, Changed = Changed0
+        ;   C = [d(Head, Trace0, Items1)|Rest], Changed = true
+        )
+    ;   C = [d(Head, Trace, Items)|C0], Changed = true
+    ).
 
 % ---- Prose shell: every substantive sentence cites a Claim ---------------
 %

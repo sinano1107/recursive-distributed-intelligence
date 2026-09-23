@@ -14,7 +14,7 @@ test(derivation_passes_through_bridge_rules_and_claims) :-
                       via(bridge(switch_from_flipped), switch(kitchen, on)),
                       fact(flipped(kitchen, on))])].
 
-test(refusal_when_expected_observation_is_not_derivable) :-
+test(refuses_when_an_observation_expected_to_be_rejected_is_not_derivable) :-
     explains(hall_lamp_unplugged, Derivation),
     Derivation == [refused(glows(hall))].
 

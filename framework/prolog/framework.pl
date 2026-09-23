@@ -1,6 +1,6 @@
 :- module(framework, [load_theory/1, check/2, explains/2, cites_core/1]).
 :- use_module(library(dcg/basics)).
-:- reexport(rendering).
+:- reexport(rendering, [render/2, parse/2]).
 
 :- dynamic claim/4, bridge/3, phenomenon/4, exclusion/4.
 
@@ -9,10 +9,11 @@
 load_theory(Dir) :-
     retractall(claim(_, _, _, _)), retractall(bridge(_, _, _)),
     retractall(phenomenon(_, _, _, _)), retractall(exclusion(_, _, _, _)),
-    retractall(template(_, _)),
+    retractall(rendering:template(_, _)),
     forall(theory_term(Dir, core, T, Names, _), store_core(T, Names)),
     forall(theory_term(Dir, bridge, T, Names, _), store_bridge(T, Names)),
     forall(theory_term(Dir, phenomena, T, _, File), store_phenomenon(T, File)),
+    validate_exclusions,
     validate_connectivity,
     validate_templates.
 
@@ -38,36 +39,53 @@ read_terms(In, Terms) :-
     ).
 
 store_core(claim(Name, Status, Clause), VarNames) :-
-    head_body(Clause, H, B), range_restricted(H, B, VarNames, claim(Name)),
+    head_body(Clause, H, B), valid_clause(H, B, VarNames, claim(Name)),
     assertz(claim(Name, Status, H, B)).
-store_core(template(Head, Words), _) :- assertz(template(Head, Words)).
+store_core(template(Head, Words), _) :- assertz(rendering:template(Head, Words)).
 
 store_bridge(bridge(Name, Clause), VarNames) :-
-    head_body(Clause, H, B), range_restricted(H, B, VarNames, bridge(Name)),
+    head_body(Clause, H, B), valid_clause(H, B, VarNames, bridge(Name)),
     assertz(bridge(Name, H, B)).
 
-% Every head variable must occur in the body, or the ground closure could
-% not enumerate the atoms the rule stands for.
-range_restricted(Head, Body, VarNames, Where) :-
+head_body((H :- B), H, B) :- !.
+head_body(H, H, true).
+
+% A clause is range restricted (every head variable occurs in the body, or
+% the ground closure could not enumerate the atoms it stands for), has no
+% variable as a goal, and no not/1 in its body (the closure never evaluates
+% negation; not/1 is legal only as a Bridge head and in Observations).
+valid_clause(Head, Body, VarNames, Where) :-
     term_variables(Head, HeadVars), term_variables(Body, BodyVars),
     (   member(V, HeadVars), \+ ( member(BV, BodyVars), BV == V )
     ->  ( member(Name=V0, VarNames), V0 == V -> true ; Name = '_' ),
         throw(theory_error(range_violation(Name, Where)))
     ;   true
-    ).
+    ),
+    forall(body_goal((Head, Body), G),
+           ( goal_functor(G, _) -> true ; throw(theory_error(variable_goal(Where))) )),
+    forall(( body_goal(Body, G), nonvar(G), G = not(_) ),
+           throw(theory_error(negation_in_body(Where)))).
+
+body_goal(G, G) :- var(G), !.
+body_goal((A, B), G) :- !, ( body_goal(A, G) ; body_goal(B, G) ).
+body_goal(true, _) :- !, fail.
+body_goal(G, G).
 
 % Observation vocabulary must be disjoint from Core vocabulary: no fact or
-% expected Observation of a Phenomenon may use a functor that occurs in a Claim.
+% Observation of a Phenomenon or Exclusion test may use a functor that
+% occurs in a Claim. Facts and Observations must be ground.
 store_phenomenon(phenomenon(Name, Deps, Facts, Expectations), File) :-
     forall(( member(Fact, Facts)
            ; member(E, Expectations), arg(1, E, Fact) ),
-           observation_only(Fact, File)),
+           ( ground(Fact) -> observation_only(Fact, File)
+           ; throw(theory_error(non_ground(Fact, phenomenon(Name)))) )),
     assertz(phenomenon(Name, Deps, Facts, Expectations)).
-store_phenomenon(Exclusion, _) :- assertz(Exclusion).
+store_phenomenon(exclusion(Name, Phenomenon, Obs, Excluded), File) :-
+    observation_only(Obs, File),
+    assertz(exclusion(Name, Phenomenon, Obs, Excluded)).
 
-observation_only(not(Obs), File) :- !, observation_only(Obs, File).
 observation_only(Obs, File) :-
-    functor(Obs, F, A),
+    goal_functor(Obs, F/A),
     (   core_vocabulary(F/A)
     ->  throw(theory_error(core_vocabulary_in_phenomenon(F/A, File)))
     ;   true
@@ -78,12 +96,25 @@ core_vocabulary(F/A) :-
     body_goal((Head, Body), Goal),
     functor(Goal, F, A).
 
-body_goal((A, B), G) :- !, ( body_goal(A, G) ; body_goal(B, G) ).
-body_goal(true, _) :- !, fail.
-body_goal(G, G).
+goal_functor(G, _) :- var(G), !, fail.
+goal_functor(not(G), FA) :- !, goal_functor(G, FA).
+goal_functor(G, F/A) :- functor(G, F, A).
 
-head_body((H :- B), H, B) :- !.
-head_body(H, H, true).
+% An Exclusion test must name a Phenomenon, a Claim or a vocabulary item
+% that exists.
+validate_exclusions :-
+    forall(( exclusion(Name, Phenomenon, _, _), \+ phenomenon(Phenomenon, _, _, _) ),
+           throw(theory_error(unresolved(phenomenon(Phenomenon), exclusion(Name))))),
+    forall(( exclusion(Name, _, _, claim(Claim)), \+ claim(Claim, _, _, _) ),
+           throw(theory_error(unresolved(claim(Claim), exclusion(Name))))),
+    forall(( exclusion(Name, _, _, F/A), \+ occurs(F/A) ),
+           throw(theory_error(unresolved(F/A, exclusion(Name))))).
+
+occurs(FA) :-
+    (   ( claim(_, _, Head, Body) ; bridge(_, Head, Body) ), body_goal((Head, Body), G)
+    ;   phenomenon(_, _, Facts, _), member(G, Facts)
+    ),
+    goal_functor(G, FA), !.
 
 % Nothing may resolve to nothing: a Claim body goal must be a Claim or
 % Bridge head; a Bridge body goal must be one of those or a fact some
@@ -98,28 +129,9 @@ validate_connectivity :-
     forall(( phenomenon(Name, _, Facts, _), member(F, Facts), \+ read_by_bridge(F) ),
            unresolved(F, phenomenon(Name))).
 
-% Templates: no reserved word, no two Templates with the same word pattern,
-% and exactly one Template per Core vocabulary item.
-validate_templates :-
-    forall(( template(Head, Words), member(W, Words), nonvar(W), reserved_word(W) ),
-           ( goal_functor(Head, FA), throw(theory_error(reserved_word(W, FA))) )),
-    findall(FA-Shape, ( template(Head, Words), goal_functor(Head, FA),
-                        copy_term(Words, Shape), term_variables(Shape, Vs),
-                        maplist(=(slot), Vs) ), Shapes),
-    forall(( member(FA1-S1, Shapes), member(FA2-S2, Shapes), FA1 @< FA2, S1 == S2 ),
-           throw(theory_error(ambiguous_templates(FA1, FA2)))),
-    forall(( setof(FA, core_vocabulary(FA), FAs), member(F/A, FAs),
-             aggregate_all(count, ( template(Head, _), functor(Head, F, A) ), N),
-             N \== 1 ),
-           ( N == 0 -> throw(theory_error(missing_template(F/A)))
-           ; throw(theory_error(duplicate_template(F/A))) )).
-
 unresolved(Goal, Where) :-
     goal_functor(Goal, FA),
     throw(theory_error(unresolved(FA, Where))).
-
-goal_functor(not(G), FA) :- !, goal_functor(G, FA).
-goal_functor(G, F/A) :- functor(G, F, A).
 
 head_functor(G) :-
     goal_functor(G, FA),
@@ -134,20 +146,43 @@ read_by_bridge(F) :-
     bridge(_, _, Body), body_goal(Body, G),
     goal_functor(G, FA), !.
 
+% Templates: no reserved word, no two Templates whose word patterns can
+% match the same sentence (a slot matches any token), and exactly one
+% Template per Core vocabulary item.
+validate_templates :-
+    forall(( rendering:template(Head, Words), member(W, Words), nonvar(W),
+             rendering:reserved_word(W) ),
+           ( goal_functor(Head, FA), throw(theory_error(reserved_word(W, FA))) )),
+    findall(FA-Shape, ( rendering:template(Head, Words), goal_functor(Head, FA),
+                        copy_term(Words, Shape), term_variables(Shape, Vs),
+                        maplist(=(slot), Vs) ), Shapes),
+    forall(( member(FA1-S1, Shapes), member(FA2-S2, Shapes), FA1 @< FA2,
+             maplist(overlapping_word, S1, S2) ),
+           throw(theory_error(ambiguous_templates(FA1, FA2)))),
+    forall(( setof(FA, core_vocabulary(FA), FAs), member(F/A, FAs),
+             aggregate_all(count, ( rendering:template(Head, _), functor(Head, F, A) ), N),
+             N \== 1 ),
+           ( N == 0 -> throw(theory_error(missing_template(F/A)))
+           ; throw(theory_error(duplicate_template(F/A))) )).
+
+overlapping_word(slot, _) :- !.
+overlapping_word(_, slot) :- !.
+overlapping_word(W, W).
+
 % ---- Checking: one Verdict per test -----------------------------------------
 
 check(Dir, Verdicts) :-
     load_theory(Dir),
     findall(verdict(Name, Outcome),
-            ( test(Name, Dependencies, Raw),
+            ( verdict_of(Name, Dependencies, Raw),
               status_outcome(Dependencies, Raw, Outcome) ),
             Verdicts).
 
-test(Name, Dependencies, Outcome) :-
+verdict_of(Name, Dependencies, Outcome) :-
     phenomenon(Name, Dependencies, _, _),
     explains(Name, Derivation),
     outcome(Derivation, Outcome).
-test(Name, Dependencies, Outcome) :-
+verdict_of(Name, Dependencies, Outcome) :-
     exclusion(Name, Phenomenon, Obs, Excluded),
     phenomenon(Phenomenon, Dependencies, Facts, _),
     exclusion_outcome(Obs, Facts, Excluded, Outcome).
@@ -166,16 +201,25 @@ status_outcome(_, Outcome, Outcome).
 softenable(underivable(_)).
 softenable(unexpected(_)).
 
-% An Exclusion test is violated when any Derivation of Obs passes through
-% the excluded Claim (claim(Name)) or vocabulary item (Functor/Arity).
+% An Exclusion test is violated when some acyclic derivation of Obs passes
+% through the excluded Claim (claim(Name)) or vocabulary item (Functor/Arity).
 exclusion_outcome(Obs, Facts, Excluded, Outcome) :-
-    closure(Facts, Closure, Completeness),
-    (   derived(Closure, Obs, _, Items), memberchk(Excluded, Items)
+    closure(Facts, closure(Atoms, Completeness)),
+    (   memberchk(Obs, Atoms),
+        derivation(Obs, Facts, Atoms, Trace),
+        passes_through(Trace, Excluded)
     ->  Outcome = violates(Excluded)
     ;   Completeness == depth_exceeded
     ->  Outcome = failed(depth_exceeded(Obs))
     ;   Outcome = explains
     ).
+
+passes_through(Trace, claim(Name)) :- memberchk(via(claim(Name), _), Trace).
+passes_through(Trace, F/A) :-
+    member(Step, Trace), step_goal(Step, Goal), functor(Goal, F, A), !.
+
+step_goal(fact(Goal), Goal).
+step_goal(via(_, Goal), Goal).
 
 outcome(Derivation, inconsistent) :- memberchk(inconsistent(_, _, _), Derivation), !.
 outcome(Derivation, failed(depth_exceeded(Obs))) :- memberchk(depth_exceeded(Obs), Derivation), !.
@@ -185,17 +229,19 @@ outcome(Derivation, failed(unexpected(Obs))) :- memberchk(unexpected(Obs, _), De
 outcome(Derivation, refuses) :- forall(member(S, Derivation), S = refused(_)), !.
 outcome(_, explains).
 
-% ---- Derivation: bottom-up closure of Core + Bridge rules over the Facts --
+% ---- Derivation --------------------------------------------------------------
 %
-% closure(Facts, Closure, Completeness): Closure holds d(Atom, Trace, Items) for every
-% ground atom derivable from the Facts: one Derivation trace (the first
-% found, nested; flatten/2 gives the step list) and the set of every Claim,
-% Bridge rule and vocabulary item that occurs in any derivation of it.
-% Iteration k adds the atoms of derivation depth k, so a theory without
-% function symbols always reaches a fixpoint and refusals are exact. The
-% depth bound is only a safety net for theories that build ever-new terms;
-% hitting it makes every verdict of the Phenomenon depth_exceeded, never a
-% clean refuses/explains.
+% Two questions, answered separately. Whether an atom is derivable is
+% decided by the bottom-up closure of Core + Bridge rules over the Facts
+% (closure/2): the exact truth set for a theory without function symbols.
+% Iteration k adds the atoms of derivation depth k, so the depth bound is
+% only a safety net for theories that build ever-new terms; hitting it
+% makes every expectation of the Phenomenon depth_exceeded, except an
+% inconsistency already proven within the settled part of the closure.
+% Which Claims and vocabulary a derivation passes through is answered by
+% enumerating the acyclic derivations of an atom top-down over that
+% closure (derivation/4): goals are ground there, so the identical-ancestor
+% check is exact and the enumeration terminates.
 % ponytail: max_depth(100) keeps the pathological case fast with the naive
 % list closure; raise it (and index the closure) if a Phenomenon needs deeper chains.
 
@@ -203,84 +249,79 @@ max_depth(100).
 
 explains(Phenomenon, Derivation) :-
     phenomenon(Phenomenon, Dependencies, Facts, Expectations),
-    closure(Facts, Closure, Completeness),
-    maplist(expectation_step(Closure, Completeness, Dependencies), Expectations, Derivation).
+    closure(Facts, Closure),
+    maplist(expectation_step(Closure, Facts, Dependencies), Expectations, Derivation).
 
 % Negation convention: not(Obs) is the declared negation of Obs in
 % Observation vocabulary. A Phenomenon is inconsistent when both derive.
-expectation_step(Closure, _, _, Expectation, inconsistent(Obs, Trace, NegTrace)) :-
+expectation_step(closure(Atoms, _), Facts, _, Expectation, inconsistent(Obs, Trace, NegTrace)) :-
     arg(1, Expectation, Obs),
     negation(Obs, Neg),
-    derived(Closure, Obs, Trace, _),
-    derived(Closure, Neg, NegTrace, _), !.
-expectation_step(_, depth_exceeded, _, Expectation, depth_exceeded(Obs)) :- !,
+    memberchk(Obs, Atoms), memberchk(Neg, Atoms), !,
+    once(derivation(Obs, Facts, Atoms, Trace)),
+    once(derivation(Neg, Facts, Atoms, NegTrace)).
+expectation_step(closure(_, depth_exceeded), _, _, Expectation, depth_exceeded(Obs)) :- !,
     arg(1, Expectation, Obs).
-% An expected Observation whose derivations pass through none of the
-% Claims the Phenomenon depends on is vacuous (a trivialising Bridge rule
-% or a fact restating the Observation), not explained.
-expectation_step(Closure, _, Dependencies, expect(Obs), Step) :-
-    derived(Closure, Obs, Trace, Items), !,
-    (   member(D, Dependencies), memberchk(claim(D), Items)
+% An expected Observation with no acyclic derivation through a Claim the
+% Phenomenon depends on is vacuous (a trivialising Bridge rule or a fact
+% restating the Observation), not explained.
+expectation_step(closure(Atoms, _), Facts, Dependencies, expect(Obs), Step) :-
+    memberchk(Obs, Atoms), !,
+    (   derivation(Obs, Facts, Atoms, Trace),
+        member(D, Dependencies), passes_through(Trace, claim(D))
     ->  Step = derived(Obs, Trace)
-    ;   Step = vacuous(Obs, Trace)
+    ;   once(derivation(Obs, Facts, Atoms, Trace)),
+        Step = vacuous(Obs, Trace)
     ).
 expectation_step(_, _, _, expect(Obs), underivable(Obs)).
-expectation_step(Closure, _, _, refuse(Obs), unexpected(Obs, Trace)) :-
-    derived(Closure, Obs, Trace, _), !.
+expectation_step(closure(Atoms, _), Facts, _, refuse(Obs), unexpected(Obs, Trace)) :-
+    memberchk(Obs, Atoms), !,
+    once(derivation(Obs, Facts, Atoms, Trace)).
 expectation_step(_, _, _, refuse(Obs), refused(Obs)).
 
 negation(not(Obs), Obs) :- !.
 negation(Obs, not(Obs)).
 
-derived(Closure, Obs, Trace, Items) :-
-    member(d(Obs, Nested, Items), Closure), !,
-    flatten(Nested, Trace).
+closure(Facts, closure(Atoms, Completeness)) :-
+    grow(Facts, 0, Atoms, Completeness).
 
-closure(Facts, Closure, Completeness) :-
-    findall(d(F, [fact(F)], [Fun/Ar]),
-            ( member(F, Facts), functor(F, Fun, Ar) ), Init),
-    iterate(Init, 0, Closure, Completeness).
-
-iterate(C0, Depth, C, Completeness) :-
-    findall(New, instance(C0, New), News),
-    foldl(merge, News, C0-false, C1-Changed),
-    (   Changed == false -> C = C1, Completeness = complete
-    ;   max_depth(Max), Depth >= Max -> C = C1, Completeness = depth_exceeded
-    ;   Depth1 is Depth + 1, iterate(C1, Depth1, C, Completeness)
-    ).
-
-% One application of a rule to atoms already in the closure. An atom that
-% is already known contributes only its Items; its Trace is never rebuilt.
-instance(C, d(Head, Trace, Items)) :-
-    rule(Name, Head, Body),
-    body_instance(Body, C, BodyTrace, BodyItems),
-    functor(Head, F, A),
-    list_to_ord_set([Name, F/A], Own),
-    ord_union(Own, BodyItems, Items),
-    (   memberchk(d(Head, _, _), C)
-    ->  Trace = known
-    ;   Trace = [via(Name, Head), BodyTrace]
+grow(Atoms0, Depth, Atoms, Completeness) :-
+    findall(Head, ( rule(_, Head, Body), body_holds(Body, Atoms0),
+                    \+ memberchk(Head, Atoms0) ), New0),
+    sort(New0, New),
+    (   New == [] -> Atoms = Atoms0, Completeness = complete
+    ;   max_depth(Max), Depth >= Max -> Atoms = Atoms0, Completeness = depth_exceeded
+    ;   append(New, Atoms0, Atoms1), Depth1 is Depth + 1,
+        grow(Atoms1, Depth1, Atoms, Completeness)
     ).
 
 rule(claim(Name), Head, Body) :- claim(Name, Status, Head, Body), Status \== untested.
 rule(bridge(Name), Head, Body) :- bridge(Name, Head, Body).
 
-body_instance(true, _, [], []) :- !.
-body_instance((A, B), C, [TA, TB], Items) :- !,
-    body_instance(A, C, TA, IA),
-    body_instance(B, C, TB, IB),
-    ord_union(IA, IB, Items).
-body_instance(Goal, C, Trace, Items) :- member(d(Goal, Trace, Items), C).
+body_holds(true, _) :- !.
+body_holds((A, B), Atoms) :- !, body_holds(A, Atoms), body_holds(B, Atoms).
+body_holds(Goal, Atoms) :- member(Goal, Atoms).
 
-merge(d(Head, Trace, Items), C0-Changed0, C-Changed) :-
-    (   select(d(Head, Trace0, Items0), C0, Rest)
-    ->  ord_union(Items0, Items, Items1),
-        (   Items1 == Items0
-        ->  C = C0, Changed = Changed0
-        ;   C = [d(Head, Trace0, Items1)|Rest], Changed = true
-        )
-    ;   C = [d(Head, Trace, Items)|C0], Changed = true
-    ).
+% derivation(+Atom, +Facts, +Atoms, -Trace): on backtracking, every acyclic
+% derivation of the ground Atom whose goals all lie in the closure Atoms.
+% Trace lists the steps in pre-order: via(claim(N), G), via(bridge(N), G), fact(G).
+derivation(Atom, Facts, Atoms, Trace) :-
+    derivation(Atom, Facts, Atoms, [], Nested),
+    flatten(Nested, Trace).
+
+derivation(Atom, Facts, _, _, [fact(Atom)]) :- memberchk(Atom, Facts).
+derivation(Atom, Facts, Atoms, Ancestors, [via(Name, Atom), BodyTrace]) :-
+    rule(Name, Atom, Body),
+    derive_body(Body, Facts, Atoms, [Atom|Ancestors], BodyTrace).
+
+derive_body(true, _, _, _, []) :- !.
+derive_body((A, B), Facts, Atoms, Ancestors, [TA, TB]) :- !,
+    derive_body(A, Facts, Atoms, Ancestors, TA),
+    derive_body(B, Facts, Atoms, Ancestors, TB).
+derive_body(Goal, Facts, Atoms, Ancestors, Trace) :-
+    member(Goal, Atoms),
+    \+ ( member(Ancestor, Ancestors), Ancestor == Goal ),
+    derivation(Goal, Facts, Atoms, Ancestors, Trace).
 
 % ---- Prose shell: every substantive sentence cites a Claim ---------------
 %

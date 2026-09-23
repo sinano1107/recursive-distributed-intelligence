@@ -1,4 +1,4 @@
-:- module(rendering, [render/2, parse/2, template/2, reserved_word/1]).
+:- module(rendering, [render/2, parse/2]).
 
 % Rendering: a Claim (Head :- Body) or a Core term becomes one English
 % sentence built from one Template per Core vocabulary item. parse/2 is
@@ -13,7 +13,7 @@
 
 :- use_module(library(varnumbers)).
 
-:- dynamic template/2.
+:- dynamic template/2.   % filled by framework:load_theory/1
 
 render(Term, English) :-
     copy_term(Term, Numbered),

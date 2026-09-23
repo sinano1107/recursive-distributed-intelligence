@@ -2,3 +2,4 @@
 bridge(part_from_inside, (part_of(P, W) :- inside(P, W))).
 bridge(holds_from_contains, (holds(W, P) :- contains(W, P))).
 bridge(unit_from_whole, (unit(W) :- whole(W))).
+bridge(not_holds_from_apart, (not(holds(W, P)) :- apart(W, P))).

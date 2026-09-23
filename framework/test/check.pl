@@ -112,4 +112,57 @@ test(head_variable_that_does_not_occur_in_the_body_is_a_load_error,
     fixture(range_violation, Dir),
     check(Dir, _).
 
+test(only_acyclic_derivations_count_for_vacuous_and_exclusion) :-
+    fixture(cyclic, Dir),
+    check(Dir, Verdicts),
+    memberchk(verdict(pair, failed(vacuous(o(a, b)))), Verdicts),
+    memberchk(verdict(pair_without_sym, explains), Verdicts),
+    memberchk(verdict(reversed_pair, explains), Verdicts),
+    memberchk(verdict(reversed_without_sym, violates(claim(sym))), Verdicts).
+
+test(inconsistency_under_a_recursive_claim) :-
+    fixture(nesting, Dir),
+    check(Dir, Verdicts),
+    memberchk(verdict(gear_apart_from_car, inconsistent), Verdicts).
+
+test(template_slot_matching_a_fixed_word_of_another_template_is_a_load_error,
+     throws(theory_error(ambiguous_templates(lit/1, state/2)))) :-
+    fixture(ambiguous_slot_templates, Dir),
+    check(Dir, _).
+
+test(negation_in_a_claim_body_is_a_load_error,
+     throws(theory_error(negation_in_body(claim(dark_unless_lit))))) :-
+    fixture(negation_in_body, Dir),
+    check(Dir, _).
+
+test(variable_as_a_body_goal_is_a_load_error,
+     throws(theory_error(variable_goal(claim(anything))))) :-
+    fixture(variable_goal, Dir),
+    check(Dir, _).
+
+test(non_ground_phenomenon_fact_is_a_load_error,
+     throws(theory_error(non_ground(flipped(_, on), phenomenon(some_lamp_on))))) :-
+    fixture(non_ground_fact, Dir),
+    check(Dir, _).
+
+test(exclusion_observation_in_core_vocabulary_is_a_load_error,
+     throws(theory_error(core_vocabulary_in_phenomenon(contains/2, _)))) :-
+    fixture(exclusion_core_vocabulary, Dir),
+    check(Dir, _).
+
+test(exclusion_naming_an_unknown_phenomenon_is_a_load_error,
+     throws(theory_error(unresolved(phenomenon(gear_in_car), exclusion(no_such_phenomenon))))) :-
+    fixture(exclusion_unknown_phenomenon, Dir),
+    check(Dir, _).
+
+test(exclusion_naming_an_unknown_claim_is_a_load_error,
+     throws(theory_error(unresolved(claim(contains_by_magic), exclusion(no_such_claim))))) :-
+    fixture(exclusion_unknown_claim, Dir),
+    check(Dir, _).
+
+test(exclusion_naming_vocabulary_that_occurs_nowhere_is_a_load_error,
+     throws(theory_error(unresolved(sibling/2, exclusion(no_such_item))))) :-
+    fixture(exclusion_unknown_vocabulary, Dir),
+    check(Dir, _).
+
 :- end_tests(check).

@@ -1,4 +1,5 @@
 :- module(framework, [load_theory/1, check/2, explains/2]).
+:- reexport(rendering).
 
 :- dynamic claim/4, bridge/3, phenomenon/4, exclusion/4.
 
@@ -7,12 +8,13 @@
 load_theory(Dir) :-
     retractall(claim(_, _, _, _)), retractall(bridge(_, _, _)),
     retractall(phenomenon(_, _, _, _)), retractall(exclusion(_, _, _, _)),
+    retractall(template(_, _)),
     forall(theory_term(Dir, core, T, _), store_core(T)),
     forall(theory_term(Dir, bridge, T, _), store_bridge(T)),
     forall(theory_term(Dir, phenomena, T, File), store_phenomenon(T, File)).
 
 % Each directory accepts only its own kinds of term.
-allowed(core, claim). allowed(bridge, bridge).
+allowed(core, claim). allowed(core, template). allowed(bridge, bridge).
 allowed(phenomena, phenomenon). allowed(phenomena, exclusion).
 
 theory_term(Dir, Sub, Term, File) :-
@@ -28,6 +30,7 @@ theory_term(Dir, Sub, Term, File) :-
 
 store_core(claim(Name, Status, Clause)) :-
     head_body(Clause, H, B), assertz(claim(Name, Status, H, B)).
+store_core(template(Head, Words)) :- assertz(template(Head, Words)).
 
 store_bridge(bridge(Name, Clause)) :-
     head_body(Clause, H, B), assertz(bridge(Name, H, B)).

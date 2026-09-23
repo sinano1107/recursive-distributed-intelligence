@@ -89,20 +89,27 @@ test(Name, Dependencies, Outcome) :-
 status_outcome(Dependencies, _, _) :-
     member(D, Dependencies), claim(D, untested, _, _), !, fail.
 status_outcome(Dependencies, failed(Reason), pending(Reason)) :-
+    softenable(Reason),
     Dependencies \== [],
     forall(member(D, Dependencies), claim(D, provisional, _, _)), !.
 status_outcome(_, Outcome, Outcome).
 
+softenable(underivable(_)).
+softenable(unexpected(_)).
+
 % An Exclusion test is violated when any Derivation of Obs passes through
 % the excluded Claim (claim(Name)) or vocabulary item (Functor/Arity).
 exclusion_outcome(Obs, Facts, Excluded, Outcome) :-
-    closure(Facts, Closure),
+    closure(Facts, Closure, Completeness),
     (   derived(Closure, Obs, _, Items), memberchk(Excluded, Items)
     ->  Outcome = violates(Excluded)
+    ;   Completeness == depth_exceeded
+    ->  Outcome = failed(depth_exceeded(Obs))
     ;   Outcome = explains
     ).
 
 outcome(Derivation, inconsistent) :- memberchk(inconsistent(_, _, _), Derivation), !.
+outcome(Derivation, failed(depth_exceeded(Obs))) :- memberchk(depth_exceeded(Obs), Derivation), !.
 outcome(Derivation, failed(underivable(Obs))) :- memberchk(underivable(Obs), Derivation), !.
 outcome(Derivation, failed(unexpected(Obs))) :- memberchk(unexpected(Obs, _), Derivation), !.
 outcome(Derivation, refuses) :- forall(member(S, Derivation), S = refused(_)), !.
@@ -115,26 +122,35 @@ outcome(_, explains).
 % found, nested; flatten/2 gives the step list) and the set of every Claim,
 % Bridge rule and vocabulary item that occurs in any derivation of it.
 % Iteration k adds the atoms of derivation depth k, so a theory without
-% function symbols always reaches a fixpoint and refusals are exact.
+% function symbols always reaches a fixpoint and refusals are exact. The
+% depth bound is only a safety net for theories that build ever-new terms;
+% hitting it makes every verdict of the Phenomenon depth_exceeded, never a
+% clean refuses/explains.
+% ponytail: max_depth(100) keeps the pathological case fast with the naive
+% list closure; raise it (and index the closure) if a Phenomenon needs deeper chains.
+
+max_depth(100).
 
 explains(Phenomenon, Derivation) :-
     phenomenon(Phenomenon, _, Facts, Expectations),
-    closure(Facts, Closure),
-    maplist(expectation_step(Closure), Expectations, Derivation).
+    closure(Facts, Closure, Completeness),
+    maplist(expectation_step(Closure, Completeness), Expectations, Derivation).
 
 % Negation convention: not(Obs) is the declared negation of Obs in
 % Observation vocabulary. A Phenomenon is inconsistent when both derive.
-expectation_step(Closure, Expectation, inconsistent(Obs, Trace, NegTrace)) :-
+expectation_step(Closure, _, Expectation, inconsistent(Obs, Trace, NegTrace)) :-
     arg(1, Expectation, Obs),
     negation(Obs, Neg),
     derived(Closure, Obs, Trace, _),
     derived(Closure, Neg, NegTrace, _), !.
-expectation_step(Closure, expect(Obs), derived(Obs, Trace)) :-
+expectation_step(_, depth_exceeded, Expectation, depth_exceeded(Obs)) :- !,
+    arg(1, Expectation, Obs).
+expectation_step(Closure, _, expect(Obs), derived(Obs, Trace)) :-
     derived(Closure, Obs, Trace, _), !.
-expectation_step(_, expect(Obs), underivable(Obs)).
-expectation_step(Closure, refuse(Obs), unexpected(Obs, Trace)) :-
+expectation_step(_, _, expect(Obs), underivable(Obs)).
+expectation_step(Closure, _, refuse(Obs), unexpected(Obs, Trace)) :-
     derived(Closure, Obs, Trace, _), !.
-expectation_step(_, refuse(Obs), refused(Obs)).
+expectation_step(_, _, refuse(Obs), refused(Obs)).
 
 negation(not(Obs), Obs) :- !.
 negation(Obs, not(Obs)).
@@ -143,16 +159,17 @@ derived(Closure, Obs, Trace, Items) :-
     member(d(Obs, Nested, Items), Closure), !,
     flatten(Nested, Trace).
 
-closure(Facts, Closure) :-
+closure(Facts, Closure, Completeness) :-
     findall(d(F, [fact(F)], [Fun/Ar]),
             ( member(F, Facts), functor(F, Fun, Ar) ), Init),
-    iterate(Init, Closure).
+    iterate(Init, 0, Closure, Completeness).
 
-iterate(C0, C) :-
+iterate(C0, Depth, C, Completeness) :-
     findall(New, instance(C0, New), News),
     foldl(merge, News, C0-false, C1-Changed),
-    (   Changed == false -> C = C1
-    ;   iterate(C1, C)
+    (   Changed == false -> C = C1, Completeness = complete
+    ;   max_depth(Max), Depth >= Max -> C = C1, Completeness = depth_exceeded
+    ;   Depth1 is Depth + 1, iterate(C1, Depth1, C, Completeness)
     ).
 
 % One application of a rule to atoms already in the closure. An atom that

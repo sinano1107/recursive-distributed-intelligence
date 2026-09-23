@@ -1,4 +1,5 @@
-:- module(framework, [load_theory/1, check/2, explains/2]).
+:- module(framework, [load_theory/1, check/2, explains/2, cites_core/1]).
+:- use_module(library(dcg/basics)).
 :- reexport(rendering).
 
 :- dynamic claim/4, bridge/3, phenomenon/4, exclusion/4.
@@ -141,3 +142,42 @@ derive(G, Facts, [via(bridge(Name), G)|Trace]) :-
 derive(G, Facts, [via(claim(Name), G)|Trace]) :-
     claim(Name, Status, G, Body), Status \== untested,
     derive(Body, Facts, Trace).
+
+% ---- Prose shell: every substantive sentence cites a Claim ---------------
+%
+% Prose files are Markdown under <theory>/prose/. A Citation is [[claim_name]].
+% Headings are ignored; the rest is split into sentences at . ! and ?.
+% A sentence is substantive when it contains a letter. Meaning is never
+% checked, only that each substantive sentence cites at least one Claim
+% that exists in the Core.
+
+cites_core(ProseFile) :-
+    file_directory_name(ProseFile, ProseDir),
+    file_directory_name(ProseDir, Dir),
+    load_theory(Dir),
+    read_file_to_string(ProseFile, Text, []),
+    split_string(Text, "\n", "", Lines),
+    exclude([L]>>string_concat("#", _, L), Lines, Body),
+    atomic_list_concat(Body, ' ', Joined),
+    split_string(Joined, ".!?", " \t", Sentences),
+    forall(( member(S, Sentences), substantive(S) ), cited(S, ProseFile)).
+
+substantive(Sentence) :-
+    string_code(_, Sentence, C), code_type(C, alpha), !.
+
+cited(Sentence, File) :-
+    string_codes(Sentence, Codes),
+    phrase(citations(Names), Codes),
+    (   Names == []
+    ->  print_message(error, format("~w: no Citation in: ~s", [File, Sentence])), fail
+    ;   forall(member(N, Names), known_claim(N, File))
+    ).
+
+known_claim(Name, _) :- claim(Name, _, _, _), !.
+known_claim(Name, File) :-
+    print_message(error, format("~w: Citation of unknown Claim ~w", [File, Name])), fail.
+
+citations([Name|Names]) -->
+    string(_), "[[", string(Codes), "]]", !,
+    { atom_codes(Name, Codes) }, citations(Names).
+citations([]) --> remainder(_).

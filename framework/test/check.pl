@@ -40,4 +40,14 @@ test(untested_claim_is_excluded_from_the_core_and_its_tests_from_the_verdicts) :
     \+ memberchk(verdict(enchanted_attic_lamp, _), Verdicts),
     memberchk(verdict(enchanted_attic_lamp_by_power, failed(underivable(glows(attic)))), Verdicts).
 
+test(phenomenon_using_core_vocabulary_is_a_load_error,
+     throws(theory_error(core_vocabulary_in_phenomenon(powered/1, _)))) :-
+    fixture(core_vocabulary_in_phenomenon, Dir),
+    check(Dir, _).
+
+test(bridge_rule_inside_a_phenomenon_file_is_a_load_error,
+     throws(theory_error(misplaced(bridge, _)))) :-
+    fixture(bridge_in_phenomenon, Dir),
+    check(Dir, _).
+
 :- end_tests(check).

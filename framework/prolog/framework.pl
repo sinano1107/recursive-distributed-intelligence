@@ -7,22 +7,56 @@
 load_theory(Dir) :-
     retractall(claim(_, _, _, _)), retractall(bridge(_, _, _)),
     retractall(phenomenon(_, _, _, _)), retractall(exclusion(_, _, _, _)),
-    forall(theory_term(Dir, core, T), store_core(T)),
-    forall(theory_term(Dir, bridge, T), store_bridge(T)),
-    forall(theory_term(Dir, phenomena, T), assertz(T)).
+    forall(theory_term(Dir, core, T, _), store_core(T)),
+    forall(theory_term(Dir, bridge, T, _), store_bridge(T)),
+    forall(theory_term(Dir, phenomena, T, File), store_phenomenon(T, File)).
 
-theory_term(Dir, Sub, Term) :-
+% Each directory accepts only its own kinds of term.
+allowed(core, claim). allowed(bridge, bridge).
+allowed(phenomena, phenomenon). allowed(phenomena, exclusion).
+
+theory_term(Dir, Sub, Term, File) :-
     atomic_list_concat([Dir, '/', Sub, '/*.pl'], Pattern),
     expand_file_name(Pattern, Files),
     member(File, Files),
     read_file_to_terms(File, Terms, []),
-    member(Term, Terms).
+    member(Term, Terms),
+    functor(Term, Kind, _),
+    (   allowed(Sub, Kind) -> true
+    ;   throw(theory_error(misplaced(Kind, File)))
+    ).
 
 store_core(claim(Name, Status, Clause)) :-
     head_body(Clause, H, B), assertz(claim(Name, Status, H, B)).
 
 store_bridge(bridge(Name, Clause)) :-
     head_body(Clause, H, B), assertz(bridge(Name, H, B)).
+
+% Observation vocabulary must be disjoint from Core vocabulary: no fact or
+% expected Observation of a Phenomenon may use a functor that occurs in a Claim.
+store_phenomenon(phenomenon(Name, Deps, Facts, Expectations), File) :-
+    forall(( member(Fact, Facts)
+           ; member(E, Expectations), arg(1, E, Fact) ),
+           observation_only(Fact, File)),
+    assertz(phenomenon(Name, Deps, Facts, Expectations)).
+store_phenomenon(Exclusion, _) :- assertz(Exclusion).
+
+observation_only(not(Obs), File) :- !, observation_only(Obs, File).
+observation_only(Obs, File) :-
+    functor(Obs, F, A),
+    (   core_vocabulary(F/A)
+    ->  throw(theory_error(core_vocabulary_in_phenomenon(F/A, File)))
+    ;   true
+    ).
+
+core_vocabulary(F/A) :-
+    claim(_, _, Head, Body),
+    body_goal((Head, Body), Goal),
+    functor(Goal, F, A).
+
+body_goal((A, B), G) :- !, ( body_goal(A, G) ; body_goal(B, G) ).
+body_goal(true, _) :- !, fail.
+body_goal(G, G).
 
 head_body((H :- B), H, B) :- !.
 head_body(H, H, true).

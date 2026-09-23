@@ -11,3 +11,14 @@ test(every_verdict_is_explains_refuses_or_pending, Bad == []) :-
     exclude([verdict(_, O)]>>(O == explains ; O == refuses ; O = pending(_)), Verdicts, Bad).
 
 :- end_tests(theory).
+
+:- begin_tests(theory_prose).
+
+test(every_prose_file_cites_the_core) :-
+    nb_getval(theory_dir, Dir),
+    atomic_list_concat([Dir, '/prose/*.md'], Pattern),
+    expand_file_name(Pattern, Files),
+    Files \== [],
+    forall(member(F, Files), cites_core(F)).
+
+:- end_tests(theory_prose).

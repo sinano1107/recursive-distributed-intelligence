@@ -45,7 +45,7 @@ Stay in this thread for all of these:
 
 Dispatch one sub-agent at the implementation model, carrying the issue number, the agreed seams, and the governing ADRs. It owns two commits and returns what it did:
 
-1. **Implementation**: `/tdd` at the agreed seams, one red-green slice at a time. Prolog has no typecheck; in its place, load each changed file with `swipl -g halt <file>` and run the single plunit file as it goes. Full suite (`swipl -g run_tests -t halt` over `framework/test/` and, for a theory slice, `check/2` over `theory/`) green, then commit.
+1. **Implementation**: `/tdd` at the agreed seams, one red-green slice at a time. Prolog has no typecheck; in its place, load each changed file with `swipl -g halt <file>` and run the single plunit file as it goes. Full suite (`swipl -g run_tests -t halt` over `framework/test/` and `theory/test/`) green, then commit.
 2. **ponytail-review**: `/ponytail-review` over its own diff, inline in the same thread, applying what it finds. Full suite green, then commit.
 
 A stage with no diff produces no commit. Never amend: keeping the stages apart is what makes each change reviewable and revertible on its own.

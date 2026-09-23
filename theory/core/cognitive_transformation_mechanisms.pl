@@ -1,14 +1,25 @@
 % Cognitive transformation mechanisms. Core vocabulary: component_of/2,
 % transformation/3, takes_up/2, returns_to/2, task_criterion/2, retains/2,
-% mechanism_in/2, cognitive_system/1, realises_intelligence/2, shared_in/2,
-% nested_in/2, recurrent_system/1.
+% cognitive_transformation/3, mechanism/1, mechanism_in/2, cognitive_system/1,
+% realises_intelligence/2, shared_in/2, nested_in/2, recurrent_system/1.
 
-% A component is a mechanism of a system when another component of that
-% system takes up what it transforms. Nothing is said about the component's
-% own intelligence.
+% A transformation is cognitive when something takes its output up and
+% transforms it in turn. Being cognitive is a relation to a taker, not a
+% property of the transformation; a taker that only records is not one.
+claim(cognitive_when_taken_up_and_transformed, required,
+    (cognitive_transformation(X, In, Out) :-
+        transformation(X, In, Out), takes_up(Y, Out), transformation(Y, Out, _))).
+
+% A mechanism is whatever performs a cognitive transformation. It needs no
+% system to belong to, and nothing is said about its own intelligence.
+claim(mechanism_when_it_transforms_cognitively, required,
+    (mechanism(X) :- cognitive_transformation(X, _, _))).
+
+% The boundary-relative role: a component serves as a mechanism in a system
+% when its cognitive transformation is taken up within that system.
 claim(mechanism_when_its_output_is_consumed, required,
     (mechanism_in(X, S) :-
-        component_of(X, S), transformation(X, _, Out),
+        component_of(X, S), cognitive_transformation(X, _, Out),
         takes_up(Y, Out), component_of(Y, S))).
 
 % Organisation alone makes a cognitive system: no task, no recurrence.
@@ -34,7 +45,7 @@ claim(nested_when_whole_is_mechanism, required,
 % into that mechanism. It supports correction; it does not guarantee it.
 claim(recurrent_when_output_returns, required,
     (recurrent_system(S) :-
-        component_of(X, S), transformation(X, _, Out),
+        component_of(X, S), cognitive_transformation(X, _, Out),
         takes_up(Y, Out), component_of(Y, S), returns_to(Y, X))).
 
 template(component_of(X, S), [X, is, a, component, of, S]).
@@ -43,6 +54,8 @@ template(takes_up(Y, R), [Y, takes, R, as, input]).
 template(returns_to(Y, X), [Y, feeds, its, output, back, into, X]).
 template(task_criterion(S, T), [S, is, given, the, task, T]).
 template(retains(X, R), [X, passively, holds, R]).
+template(cognitive_transformation(X, In, Out), [X, performs, a, cognitive, transformation, of, In, into, Out]).
+template(mechanism(X), [X, is, a, cognitive, transformation, mechanism]).
 template(mechanism_in(X, S), [X, serves, as, a, cognitive, transformation, mechanism, in, S]).
 template(cognitive_system(S), [S, is, an, organised, cognitive, system]).
 template(realises_intelligence(S, T), [S, realises, intelligence, under, the, task, T]).

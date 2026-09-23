@@ -1,8 +1,8 @@
 % Observation vocabulary.
 % Facts: belongs(X, S), transforms(X, In, Out), consumes(Y, Out),
 %        feeds_back(Y, X), task(S, T), stores(X, R).
-% Observations: carries_out(S, T), serves_as_mechanism(X, S), cognitive_whole(X),
-%               shared_state(R, S), nested(X, S), revisable(S).
+% Observations: carries_out(S, T), is_mechanism(X), serves_as_mechanism(X, S),
+%               cognitive_whole(X), shared_state(R, S), nested(X, S), revisable(S).
 
 % E1: a team reviews what no member reviews; a person is not the privileged
 % minimum unit.
@@ -39,6 +39,14 @@ phenomenon(person_is_whole_and_component,
     [expect(cognitive_whole(alice)), expect(cognitive_whole(team)),
      expect(serves_as_mechanism(alice, team)), expect(nested(alice, team))]).
 
+% E5: a mechanism belongs to no named system; the client transforms the
+% translation, nobody transforms the reply.
+phenomenon(translator_without_a_system,
+    [mechanism_when_it_transforms_cognitively, cognitive_when_taken_up_and_transformed],
+    [transforms(translator, letter, translation), consumes(client, translation),
+     transforms(client, translation, reply)],
+    [expect(is_mechanism(translator)), refuse(is_mechanism(client))]).
+
 % E4: a critic that adds information, and re-entry.
 phenomenon(critic_in_a_design_loop,
     [mechanism_when_its_output_is_consumed, recurrent_when_output_returns],
@@ -56,12 +64,15 @@ phenomenon(uncoupled_processors,
      task(farm, sorting)],
     [refuse(carries_out(farm, sorting))]).
 
-% R2: a filing cabinet is a coupling surface, not a mechanism.
+% R2: a filing cabinet is a coupling surface, not a mechanism. The manager
+% transforms the summary; a taker that only records would not make the clerk
+% a mechanism.
 phenomenon(filing_cabinet_is_not_a_mechanism,
     [mechanism_when_its_output_is_consumed, shared_state_when_stored_and_consumed],
     [belongs(cabinet, office), belongs(clerk, office), belongs(manager, office),
      stores(cabinet, records), consumes(clerk, records),
-     transforms(clerk, records, summary), consumes(manager, summary)],
+     transforms(clerk, records, summary), consumes(manager, summary),
+     transforms(manager, summary, decision)],
     [expect(serves_as_mechanism(clerk, office)), expect(shared_state(records, office)),
      refuse(serves_as_mechanism(cabinet, office))]).
 

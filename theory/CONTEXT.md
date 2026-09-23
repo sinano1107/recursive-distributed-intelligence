@@ -18,12 +18,16 @@ Each term names its Core vocabulary item; the Observation vocabulary a Phenomeno
 
 ### Cognitive transformation mechanisms
 
-**Cognitive transformation** (`transformation/3`):
-A context-sensitive transformation of one representation or state into another. It need not reduce information: it may compress, expand, criticise, retrieve, translate, predict, or reorganise its input.
-_Avoid_: compression, computation, processing step
+**Transformation** (`transformation/3`; Observation `transforms/3`):
+One representation or state turned into another by some component. Not every transformation is cognitive.
+_Avoid_: computation, processing step
 
-**Cognitive transformation mechanism** (`mechanism_in/2`; Observation `serves_as_mechanism/2`):
-A component of a system whose transformation another component of that system takes up. A functional role at a chosen boundary, silent about the component's own intelligence. A component whose output nothing takes up is not one.
+**Cognitive transformation** (`cognitive_transformation/3`):
+A transformation whose output another component takes up and transforms in turn. Being cognitive is a relation to a taker, not a property of the transformation itself: the same transformation is cognitive at a boundary that contains such a taker and not at one that does not. It need not reduce information and need not succeed.
+_Avoid_: compression, useful transformation, intrinsic property
+
+**Cognitive transformation mechanism** (`mechanism/1`; Observation `is_mechanism/1`):
+Whatever performs a cognitive transformation. It needs no system to belong to and is silent about its own intelligence. It serves as a mechanism in a particular system (`mechanism_in/2`; Observation `serves_as_mechanism/2`) when it is a component of that system and its cognitive transformation is taken up within it: that is the boundary-relative role.
 _Avoid_: agent, processor, node, sub-intelligence
 
 **Coupling surface** (`shared_in/2`; Observation `shared_state/2`):

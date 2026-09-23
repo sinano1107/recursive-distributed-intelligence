@@ -14,4 +14,4 @@ For a `ready-for-agent` issue use `/implement-rdi <issue>` (not `/implement`). `
 
 ### Domain docs
 
-Single-context: one `CONTEXT.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.
+Multi-context: `CONTEXT-MAP.md` at the repo root points to `framework/CONTEXT.md` and `theory/CONTEXT.md`. Repo-wide ADRs live in `docs/adr/`, framework-scoped ones in `framework/docs/adr/`. See `docs/agents/domain.md`.

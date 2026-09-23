@@ -2,20 +2,20 @@
 % to test: each is passed through by some expected derivation, or is a Claim
 % whose silence a refuse tests.
 % Facts: belongs(X, S), transforms(X, In, Out), consumes(Y, Out),
-%        feeds_back(Y, X), task(S, T), judges_under(E, T), stores(X, R).
+%        feeds_back(Y, X), criterion(S, T), judges_under(E, T), stores(X, R).
 % Observations: turns(S, In, Out), carries_out(S, T), is_mechanism(X), serves_as_mechanism(X, S),
 %               cognitive_whole(X), shared_state(R, S), nested(X, S), recurrent(S),
 %               revisable(S).
 
 % E1: a team reviews what no member reviews; a person is not the privileged
-% minimum unit. The task enters the working: alice takes the brief up.
+% minimum unit. The criterion enters the working: alice takes the brief up.
 phenomenon(team_reviews_what_no_member_reviews,
     [intelligence_when_organised_and_directed, directed_when_component_takes_up_criterion,
      whole_when_it_has_a_mechanism, mechanism_when_its_output_is_consumed],
     [belongs(alice, team), belongs(bob, team),
      transforms(alice, draft, critique), consumes(bob, critique),
      transforms(bob, critique, revision), feeds_back(bob, alice),
-     task(team, review), consumes(alice, review)],
+     criterion(team, review), consumes(alice, review)],
     [expect(carries_out(team, review)), refuse(carries_out(alice, review))]).
 
 % E2: human + LLM + CI; no fact ascribes intelligence to any component.
@@ -25,7 +25,7 @@ phenomenon(human_llm_ci_composite,
     [belongs(llm, composite), belongs(dev, composite), belongs(ci, composite),
      transforms(llm, spec, patch), consumes(dev, patch), consumes(ci, patch),
      transforms(dev, patch, verdict), transforms(ci, patch, report), consumes(dev, report),
-     feeds_back(dev, llm), task(composite, shipping), consumes(dev, shipping)],
+     feeds_back(dev, llm), criterion(composite, shipping), consumes(dev, shipping)],
     [expect(carries_out(composite, shipping)), refuse(carries_out(llm, shipping))]).
 
 % E3: nesting; the same entity is a whole at one boundary and a mechanism at
@@ -73,7 +73,7 @@ phenomenon(uncoupled_processors,
      mechanism_when_its_output_is_consumed],
     [belongs(p1, farm), belongs(p2, farm), belongs(p3, farm),
      transforms(p1, input, out1), transforms(p2, input, out2), transforms(p3, input, out3),
-     task(farm, sorting)],
+     criterion(farm, sorting)],
     [refuse(carries_out(farm, sorting))]).
 
 % R2: a filing cabinet is a coupling surface, not a mechanism. The manager
@@ -95,7 +95,7 @@ phenomenon(unconsumed_transformation,
      transforms(zip, log, archive)],
     [refuse(serves_as_mechanism(zip, office))]).
 
-% R4: coupled but no task; direction is supplied from outside.
+% R4: coupled but under no criterion.
 phenomenon(coupled_but_undirected,
     [whole_when_it_has_a_mechanism, intelligence_when_organised_and_directed,
      mechanism_when_its_output_is_consumed],
@@ -152,7 +152,7 @@ phenomenon(pipeline_as_mechanism_in_a_larger_system,
      transforms(decoder, file, pixels), consumes(checksum, pixels), transforms(checksum, pixels, digest),
      belongs(pipeline, backup_system), belongs(verifier, backup_system),
      consumes(verifier, digest), transforms(verifier, digest, verdict),
-     task(backup_system, safe_storage), consumes(verifier, safe_storage)],
+     criterion(backup_system, safe_storage), consumes(verifier, safe_storage)],
     [expect(turns(pipeline, file, digest)), expect(is_mechanism(pipeline)),
      expect(nested(pipeline, backup_system)), expect(carries_out(backup_system, safe_storage)),
      refuse(carries_out(pipeline, safe_storage))]).
@@ -169,21 +169,21 @@ phenomenon(pipeline_cannot_revise,
      transforms(decoder, file, pixels), consumes(checksum, pixels), transforms(checksum, pixels, digest)],
     [refuse(revisable(pipeline))]).
 
-% R8/E11: a task that is only a label does not direct the pipeline; a
-% comparator that takes the criterion up does.
-phenomenon(pipeline_with_a_label,
+% R8/E11: a criterion that is only attributed does not direct the pipeline; a
+% comparator that takes it up does.
+phenomenon(pipeline_with_an_attributed_criterion,
     [intelligence_when_organised_and_directed, directed_when_component_takes_up_criterion,
      whole_when_it_has_a_mechanism],
     [belongs(decoder, pipeline), belongs(checksum, pipeline),
      transforms(decoder, file, pixels), consumes(checksum, pixels), transforms(checksum, pixels, digest),
-     task(pipeline, integrity)],
+     criterion(pipeline, integrity)],
     [expect(cognitive_whole(pipeline)), refuse(carries_out(pipeline, integrity))]).
 phenomenon(pipeline_with_a_comparator,
     [intelligence_when_organised_and_directed, directed_when_component_takes_up_criterion],
     [belongs(decoder, pipeline), belongs(checksum, pipeline), belongs(comparator, pipeline),
      transforms(decoder, file, pixels), consumes(checksum, pixels), transforms(checksum, pixels, digest),
      consumes(comparator, digest), transforms(comparator, digest, verdict),
-     task(pipeline, integrity), consumes(comparator, integrity)],
+     criterion(pipeline, integrity), consumes(comparator, integrity)],
     [expect(carries_out(pipeline, integrity))]).
 
 % E12: direction supplied from outside. No member takes the criterion up;
@@ -195,7 +195,7 @@ phenomenon(team_directed_by_an_editor,
     [belongs(alice, team), belongs(bob, team),
      transforms(alice, draft, critique), consumes(bob, critique),
      transforms(bob, critique, revision), feeds_back(bob, alice),
-     task(team, publication), judges_under(editor, publication),
+     criterion(team, publication), judges_under(editor, publication),
      consumes(editor, revision), transforms(editor, revision, notes), feeds_back(editor, alice)],
     [expect(carries_out(team, publication))]).
 
@@ -242,6 +242,6 @@ phenomenon(team_judged_without_reply,
     [belongs(alice, team), belongs(bob, team),
      transforms(alice, draft, critique), consumes(bob, critique),
      transforms(bob, critique, revision), feeds_back(bob, alice),
-     task(team, publication), judges_under(editor, publication),
+     criterion(team, publication), judges_under(editor, publication),
      consumes(editor, revision), transforms(editor, revision, notes)],
     [expect(cognitive_whole(team)), refuse(carries_out(team, publication))]).

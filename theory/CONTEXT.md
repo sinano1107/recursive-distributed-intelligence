@@ -24,7 +24,7 @@ These terms are not defined by any Claim. They enter as facts a Phenomenon state
 - **Transformation** (`transformation/3`; Observation `transforms/3`): defined below only as far as composition; that a component transforms is a primitive.
 - **Uptake** (`takes_up/2`; Observation `consumes/2`): Y takes R as input.
 - **Return** (`returns_to/2`; Observation `feeds_back/2`): Y's output goes back into X.
-- **Task** (`task_criterion/2`; Observation `task/2`) and **Evaluator** (`evaluator_of/2`; Observation `judges_under/2`): a criterion attributed to S, and who judges under it.
+- **Criterion** (`under_criterion/2`; Observation `criterion/2`) and **Evaluator** (`evaluator_of/2`; Observation `judges_under/2`): a criterion attributed to S, and who judges under it.
 - **Holding** (`retains/2`; Observation `stores/2`): X keeps R available without transforming it. "Passively" glosses the absence of a transformation by X.
 
 ### Cognitive transformation mechanisms
@@ -46,19 +46,19 @@ A state that one component passively holds and another component takes up. Holdi
 _Avoid_: memory, channel, interface
 
 **Organised cognitive system** (`cognitive_system/1`; Observation `cognitive_whole/1`):
-A system in which at least one component serves as a cognitive transformation mechanism. Organisation alone makes one; no task and no recurrence is required.
+A system in which at least one component serves as a cognitive transformation mechanism. Organisation alone makes one; no criterion and no recurrence is required.
 _Avoid_: collective, group mind, intelligent system
 
-**Task criterion** (`task_criterion/2`; Observation `task/2`):
-The task- or value-relative criterion under which a system's transitions count as effective. Attributed to a system by whoever draws its boundary; attribution alone directs nothing.
-_Avoid_: goal, objective, utility, reward
+**Criterion** (`under_criterion/2`; Observation `criterion/2`):
+What a system's transitions are judged effective by. A task, a goal, a value gradient or an evaluator's standard can supply one; the Core does not say where it comes from. Attributed to a system by whoever draws its boundary; attribution alone directs nothing, and a criterion is not an obligation.
+_Avoid_: task, goal, objective, utility, reward
 
 **Direction** (`directed_by/2`):
 A criterion directs a system when it enters the working: a component takes the criterion up, or an evaluator judging under it (`evaluator_of/2`; Observation `judges_under/2`) takes the system's output up and its response returns into the system. Neither requires an internal goal.
 _Avoid_: agency, motivation, alignment
 
 **Intelligence** (`realises_intelligence/2`; Observation `carries_out/2`):
-The working of an organised cognitive system under a criterion that directs it. Not a capacity the system owns and not a label. The Core states only the two conditions; the vault's grading of intelligence is not formalised.
+The working of an organised cognitive system under a criterion that directs it. Not a capacity the system owns and not an attribution. The Core states only the two conditions; the vault's grading of intelligence is not formalised.
 _Avoid_: capability, capacity, ability, IQ, scalar intelligence
 
 **Recurrence** (`recurrent_system/1`; Observation `recurrent/1`):

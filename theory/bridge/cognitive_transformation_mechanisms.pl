@@ -4,7 +4,7 @@ bridge(component_from_belongs, (component_of(X, S) :- belongs(X, S))).
 bridge(transformation_from_transforms, (transformation(X, In, Out) :- transforms(X, In, Out))).
 bridge(takes_up_from_consumes, (takes_up(Y, R) :- consumes(Y, R))).
 bridge(returns_from_feeds_back, (returns_to(Y, X) :- feeds_back(Y, X))).
-bridge(criterion_from_task, (task_criterion(S, T) :- task(S, T))).
+bridge(under_criterion_from_criterion, (under_criterion(S, T) :- criterion(S, T))).
 bridge(retains_from_stores, (retains(X, R) :- stores(X, R))).
 bridge(evaluator_from_judges_under, (evaluator_of(E, T) :- judges_under(E, T))).
 % Core out to Observations.

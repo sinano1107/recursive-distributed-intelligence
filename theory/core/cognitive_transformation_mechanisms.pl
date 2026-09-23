@@ -1,5 +1,5 @@
 % Cognitive transformation mechanisms. Core vocabulary: component_of/2,
-% transformation/3, takes_up/2, returns_to/2, task_criterion/2, retains/2,
+% transformation/3, takes_up/2, returns_to/2, under_criterion/2, retains/2,
 % cognitive_transformation/3, mechanism/1, mechanism_in/2, cognitive_system/1,
 % evaluator_of/2, directed_by/2, realises_intelligence/2, shared_in/2,
 % nested_in/2, recurrent_system/1, can_revise/1.
@@ -40,19 +40,19 @@ claim(mechanism_when_its_output_is_consumed, required,
         component_of(X, S), transformation(X, _, Out),
         component_of(Y, S), takes_up(Y, Out), transformation(Y, Out, _))).
 
-% Organisation alone makes a cognitive system: no task, no recurrence.
+% Organisation alone makes a cognitive system: no criterion, no recurrence.
 claim(whole_when_it_has_a_mechanism, required,
     (cognitive_system(S) :- mechanism_in(_, S))).
 
-% Direction is supplied, not labelled: a criterion directs a system when it
+% Direction is supplied, not attributed: a criterion directs a system when it
 % enters the working, either because a component takes the criterion up or
 % because an evaluator judging under it takes the system's output up and its
 % response returns into the system. Neither needs an internal goal.
 claim(directed_when_component_takes_up_criterion, required,
-    (directed_by(S, T) :- task_criterion(S, T), component_of(X, S), takes_up(X, T))).
+    (directed_by(S, T) :- under_criterion(S, T), component_of(X, S), takes_up(X, T))).
 claim(directed_when_evaluator_returns, required,
     (directed_by(S, T) :-
-        task_criterion(S, T), evaluator_of(E, T), transformation(S, _, Out),
+        under_criterion(S, T), evaluator_of(E, T), transformation(S, _, Out),
         takes_up(E, Out), returns_to(E, X), component_of(X, S))).
 
 % Intelligence is the working of an organised system under a criterion that
@@ -89,7 +89,7 @@ template(component_of(X, S), [X, is, a, component, of, S]).
 template(transformation(X, In, Out), [X, transforms, In, into, Out]).
 template(takes_up(Y, R), [Y, takes, R, as, input]).
 template(returns_to(Y, X), [Y, feeds, its, output, back, into, X]).
-template(task_criterion(S, T), [S, is, given, the, task, T]).
+template(under_criterion(S, T), [S, is, under, the, criterion, T]).
 template(evaluator_of(E, T), [E, judges, under, the, criterion, T]).
 template(directed_by(S, T), [S, is, directed, by, the, criterion, T]).
 template(retains(X, R), [X, passively, holds, R]).
@@ -97,7 +97,7 @@ template(cognitive_transformation(X, In, Out), [X, performs, a, cognitive, trans
 template(mechanism(X), [X, is, a, cognitive, transformation, mechanism]).
 template(mechanism_in(X, S), [X, serves, as, a, cognitive, transformation, mechanism, in, S]).
 template(cognitive_system(S), [S, is, an, organised, cognitive, system]).
-template(realises_intelligence(S, T), [S, realises, intelligence, under, the, task, T]).
+template(realises_intelligence(S, T), [S, realises, intelligence, under, the, criterion, T]).
 template(shared_in(R, S), [R, is, a, coupling, surface, within, S]).
 template(nested_in(X, S), [X, is, nested, in, S]).
 template(recurrent_system(S), [S, is, a, recurrent, cognitive, system]).

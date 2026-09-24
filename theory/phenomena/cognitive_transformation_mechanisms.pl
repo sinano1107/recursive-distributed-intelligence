@@ -11,7 +11,7 @@
 % minimum unit. The criterion enters the working: alice takes the brief up.
 phenomenon(team_reviews_what_no_member_reviews,
     [intelligence_when_organised_and_directed, directed_when_component_takes_up_criterion,
-     whole_when_it_has_a_mechanism, mechanism_when_its_output_is_taken_up_in_a_directed_system],
+     whole_when_it_has_a_mechanism, mechanism_when_the_working_takes_up_its_output],
     [belongs(alice, team), belongs(bob, team),
      transforms(alice, draft, critique), consumes(bob, critique),
      transforms(bob, critique, revision), feeds_back(bob, alice),
@@ -21,7 +21,7 @@ phenomenon(team_reviews_what_no_member_reviews,
 % E2: human + LLM + CI; no fact ascribes intelligence to any component.
 phenomenon(human_llm_ci_composite,
     [intelligence_when_organised_and_directed, directed_when_component_takes_up_criterion,
-     whole_when_it_has_a_mechanism, mechanism_when_its_output_is_taken_up_in_a_directed_system],
+     whole_when_it_has_a_mechanism, mechanism_when_the_working_takes_up_its_output],
     [belongs(llm, composite), belongs(dev, composite), belongs(ci, composite),
      transforms(llm, spec, patch), consumes(dev, patch), consumes(ci, patch),
      transforms(dev, patch, verdict), transforms(ci, patch, report), consumes(dev, report),
@@ -34,7 +34,7 @@ phenomenon(human_llm_ci_composite,
 % there for the exclusion below.
 phenomenon(person_is_whole_and_component,
     [nested_when_whole_is_mechanism, whole_when_it_has_a_mechanism,
-     mechanism_when_its_output_is_taken_up_in_a_directed_system],
+     mechanism_when_the_working_takes_up_its_output],
     [belongs(perception, alice), belongs(recall, alice),
      transforms(perception, scene, cue), consumes(recall, cue),
      transforms(recall, cue, recollection), consumes(perception, recollection),
@@ -48,7 +48,7 @@ phenomenon(person_is_whole_and_component,
 
 % E4: a critic that adds information, and re-entry.
 phenomenon(critic_in_a_studio,
-    [mechanism_when_its_output_is_taken_up_in_a_directed_system, recurrent_when_output_returns,
+    [mechanism_when_the_working_takes_up_its_output, recurrent_when_output_returns,
      recurrent_cognitive_when_directed],
     [belongs(critic, studio), belongs(planner, studio),
      transforms(critic, proposal, review), consumes(planner, review),
@@ -84,21 +84,22 @@ phenomenon(random_adder_cannot_revise,
      transforms(adder, number, sum), feeds_back(adder, rng)],
     [refuse(revisable(adder_pair))]).
 
-% E5: a mechanism belongs to no named system, but its taker does: the client
-% transforms the translation inside a firm directed by the deal. Nobody
-% transforms the reply.
-phenomenon(translator_without_a_system,
-    [mechanism_when_it_transforms_cognitively, cognitive_when_taken_up_into_a_directed_working,
-     directed_when_component_takes_up_criterion],
-    [transforms(translator, letter, translation), consumes(client, translation),
+% E5: a mechanism needs no system of its own; the boundary that makes the
+% translator one is drawn round translator and client as an exchange
+% working towards a deal. Nobody transforms the reply.
+phenomenon(translator_in_an_exchange,
+    [mechanism_when_it_serves_in_some_system, cognitive_when_taken_up_by_the_working_of_its_system,
+     working_takes_up_through_a_component, directed_when_component_takes_up_criterion],
+    [belongs(translator, exchange), belongs(client, exchange),
+     transforms(translator, letter, translation), consumes(client, translation),
      transforms(client, translation, reply),
-     belongs(client, firm), criterion(firm, deal), consumes(client, deal)],
+     criterion(exchange, deal), consumes(client, deal)],
     [expect(is_mechanism(translator)), refuse(is_mechanism(client))]).
 
 % R1: identical uncoupled processors; more components are not better.
 phenomenon(uncoupled_processors,
     [intelligence_when_organised_and_directed, whole_when_it_has_a_mechanism,
-     mechanism_when_its_output_is_taken_up_in_a_directed_system],
+     mechanism_when_the_working_takes_up_its_output],
     [belongs(p1, farm), belongs(p2, farm), belongs(p3, farm),
      transforms(p1, input, out1), transforms(p2, input, out2), transforms(p3, input, out3),
      criterion(farm, sorting), consumes(p1, sorting)],
@@ -108,7 +109,7 @@ phenomenon(uncoupled_processors,
 % transforms the summary; a taker that only records would not make the clerk
 % a mechanism.
 phenomenon(filing_cabinet_is_not_a_mechanism,
-    [mechanism_when_its_output_is_taken_up_in_a_directed_system, shared_state_when_stored_and_consumed],
+    [mechanism_when_the_working_takes_up_its_output, shared_state_when_stored_and_consumed],
     [belongs(cabinet, office), belongs(clerk, office), belongs(manager, office),
      stores(cabinet, records), consumes(clerk, records),
      transforms(clerk, records, summary), consumes(manager, summary),
@@ -119,7 +120,7 @@ phenomenon(filing_cabinet_is_not_a_mechanism,
 
 % R3: a transformation nobody consumes; not every transformation is cognitive.
 phenomenon(unconsumed_transformation,
-    [mechanism_when_its_output_is_taken_up_in_a_directed_system],
+    [mechanism_when_the_working_takes_up_its_output],
     [belongs(zip, office), belongs(clerk, office),
      transforms(zip, log, archive), criterion(office, compliance), consumes(clerk, compliance)],
     [refuse(serves_as_mechanism(zip, office))]).
@@ -128,7 +129,7 @@ phenomenon(unconsumed_transformation,
 % nothing directs it, so it is not a cognitive system and realises nothing.
 phenomenon(coupled_but_undirected,
     [whole_when_it_has_a_mechanism, intelligence_when_organised_and_directed,
-     mechanism_when_its_output_is_taken_up_in_a_directed_system, transformation_when_components_chain],
+     mechanism_when_the_working_takes_up_its_output, transformation_when_components_chain],
     [belongs(alice, team), belongs(bob, team),
      transforms(alice, draft, critique), consumes(bob, critique),
      transforms(bob, critique, revision), feeds_back(bob, alice)],
@@ -141,20 +142,20 @@ exclusion(nesting_without_recurrence_claim, person_is_whole_and_component,
     serves_as_mechanism(alice, team), claim(recurrent_when_output_returns)).
 
 % E6: the one-step rule is asymmetric on purpose: a's transformation is
-% cognitive because b, inside a directed system, takes it up and transforms
-% it; b's is terminal here.
+% cognitive because b, inside their directed system, takes it up and
+% transforms it; b's is terminal here.
 phenomenon(two_step_chain,
-    [cognitive_when_taken_up_into_a_directed_working, mechanism_when_it_transforms_cognitively,
-     directed_when_component_takes_up_criterion],
-    [transforms(a, x, y), consumes(b, y), transforms(b, y, z),
-     belongs(b, s), criterion(s, t), consumes(b, t)],
+    [cognitive_when_taken_up_by_the_working_of_its_system, mechanism_when_it_serves_in_some_system,
+     working_takes_up_through_a_component, directed_when_component_takes_up_criterion],
+    [belongs(a, s), belongs(b, s), transforms(a, x, y), consumes(b, y), transforms(b, y, z),
+     criterion(s, t), consumes(b, t)],
     [expect(is_mechanism(a)), refuse(is_mechanism(b))]).
 
 % E7: the last transformation before action is taken up by the world. The
 % boundary of the game is drawn to include the world, and the player b
 % takes up winning, so the world is a component of a directed system.
 phenomenon(action_taken_up_by_the_world,
-    [cognitive_when_taken_up_into_a_directed_working, mechanism_when_it_transforms_cognitively,
+    [cognitive_when_taken_up_by_the_working_of_its_system, mechanism_when_it_serves_in_some_system,
      directed_when_component_takes_up_criterion],
     [transforms(a, x, y), consumes(b, y), transforms(b, y, move),
      consumes(world, move), transforms(world, move, position),
@@ -165,25 +166,27 @@ phenomenon(action_taken_up_by_the_world,
 % position up and transforms it. Mechanism-hood extends to the environment
 % when the boundary is drawn so.
 phenomenon(world_as_mechanism_in_the_game,
-    [cognitive_when_taken_up_into_a_directed_working, mechanism_when_it_transforms_cognitively,
-     mechanism_when_its_output_is_taken_up_in_a_directed_system],
+    [cognitive_when_taken_up_by_the_working_of_its_system, mechanism_when_it_serves_in_some_system,
+     mechanism_when_the_working_takes_up_its_output],
     [transforms(b, y, move), consumes(world, move), transforms(world, move, position),
      consumes(b, position), transforms(b, position, move2),
      belongs(b, game), belongs(world, game), criterion(game, winning), consumes(b, winning)],
     [expect(is_mechanism(world)), expect(serves_as_mechanism(world, game))]).
 
 % E8/R5: uptake has no date. A paper read a century later was a cognitive
-% transformation; one only archived was not.
+% transformation, within a scholarship drawn across the century; one only
+% archived was not.
 phenomenon(paper_read_a_century_later,
-    [cognitive_when_taken_up_into_a_directed_working, mechanism_when_it_transforms_cognitively,
+    [cognitive_when_taken_up_by_the_working_of_its_system, mechanism_when_it_serves_in_some_system,
      directed_when_component_takes_up_criterion],
-    [transforms(author, thoughts, paper), consumes(reader, paper), transforms(reader, paper, understanding),
-     belongs(reader, scholarship), criterion(scholarship, truth), consumes(reader, truth)],
+    [belongs(author, scholarship), belongs(reader, scholarship),
+     transforms(author, thoughts, paper), consumes(reader, paper), transforms(reader, paper, understanding),
+     criterion(scholarship, truth), consumes(reader, truth)],
     [expect(is_mechanism(author))]).
 phenomenon(paper_never_read,
-    [cognitive_when_taken_up_into_a_directed_working, mechanism_when_it_transforms_cognitively],
-    [transforms(author, thoughts, paper), stores(archive, paper),
-     belongs(archive, library), belongs(librarian, library),
+    [cognitive_when_taken_up_by_the_working_of_its_system, mechanism_when_it_serves_in_some_system],
+    [belongs(author, library), belongs(archive, library), belongs(librarian, library),
+     transforms(author, thoughts, paper), stores(archive, paper),
      criterion(library, preservation), consumes(librarian, preservation)],
     [refuse(is_mechanism(author))]).
 
@@ -202,8 +205,8 @@ phenomenon(painting_as_coupling_surface,
 % whole at one scale serving as a mechanism at a larger one.
 phenomenon(pipeline_as_mechanism_in_a_larger_system,
     [transformation_when_components_chain, nested_when_whole_is_mechanism,
-     cognitive_when_taken_up_into_a_directed_working, mechanism_when_it_transforms_cognitively,
-     mechanism_when_its_output_is_taken_up_in_a_directed_system,
+     cognitive_when_taken_up_by_the_working_of_its_system, mechanism_when_it_serves_in_some_system,
+     mechanism_when_the_working_takes_up_its_output,
      intelligence_when_organised_and_directed, directed_when_component_takes_up_criterion],
     [belongs(decoder, pipeline), belongs(checksum, pipeline),
      transforms(decoder, file, pixels), consumes(checksum, pixels), transforms(checksum, pixels, digest),
@@ -220,7 +223,7 @@ phenomenon(pipeline_as_mechanism_in_a_larger_system,
 % cognitive system at its own boundary, and so nested in the backup system.
 phenomenon(directed_pipeline_nested_in_a_larger_system,
     [nested_when_whole_is_mechanism, whole_when_it_has_a_mechanism,
-     mechanism_when_its_output_is_taken_up_in_a_directed_system],
+     mechanism_when_the_working_takes_up_its_output],
     [belongs(decoder, pipeline), belongs(checksum, pipeline),
      transforms(decoder, file, pixels), consumes(checksum, pixels), transforms(checksum, pixels, digest),
      criterion(pipeline, integrity), consumes(checksum, integrity),
@@ -265,10 +268,11 @@ phenomenon(pipeline_with_a_comparator,
 
 % E12: direction supplied from outside. No member takes the criterion up;
 % an editor judging under it takes the team's revision up and replies to
-% alice. The team's transformation is derived from the alice-bob chain.
+% alice. The team's transformation is derived from the alice-bob chain, and
+% bob, whose revision the returning editor takes up, is a mechanism.
 phenomenon(team_directed_by_an_editor,
     [intelligence_when_organised_and_directed, directed_when_evaluator_returns,
-     transformation_when_components_chain, cognitive_when_taken_up_by_an_evaluator],
+     transformation_when_components_chain, working_takes_up_through_a_returning_evaluator],
     [belongs(alice, team), belongs(bob, team),
      transforms(alice, draft, critique), consumes(bob, critique),
      transforms(bob, critique, revision), feeds_back(bob, alice),
@@ -280,7 +284,7 @@ phenomenon(team_directed_by_an_editor,
 % along time. A solitary author who re-reads and reworks the draft is a
 % mechanism, and the writing is a recurrent cognitive system.
 phenomenon(author_rereads_own_draft,
-    [cognitive_when_taken_up_into_a_directed_working, mechanism_when_it_transforms_cognitively,
+    [cognitive_when_taken_up_by_the_working_of_its_system, mechanism_when_it_serves_in_some_system,
      directed_when_component_takes_up_criterion,
      whole_when_it_has_a_mechanism, recurrent_when_output_returns, recurrent_cognitive_when_directed],
     [belongs(author, writing), transforms(author, thoughts, draft),
@@ -304,35 +308,39 @@ phenomenon(three_step_chain,
     [expect(turns(box, x, w))]).
 
 % R9: a system whose internal taker does nothing with what it takes up is
-% not a cognitive system, even if someone outside, inside a directed system
-% of their own, transforms it. Organisation is integration inside the boundary.
+% not a cognitive system, even if x is a mechanism in another directed
+% system t where z transforms the same output. Organisation is integration
+% inside the boundary.
 phenomenon(taker_inside_that_does_nothing,
-    [whole_when_it_has_a_mechanism, mechanism_when_its_output_is_taken_up_in_a_directed_system,
-     mechanism_when_it_transforms_cognitively],
+    [whole_when_it_has_a_mechanism, mechanism_when_the_working_takes_up_its_output,
+     mechanism_when_it_serves_in_some_system],
     [belongs(x, s), belongs(y, s), transforms(x, a, b), consumes(y, b),
      criterion(s, k), consumes(y, k),
-     consumes(z, b), transforms(z, b, c), belongs(z, t), criterion(t, correctness), consumes(z, correctness)],
+     belongs(x, t), belongs(z, t), consumes(z, b), transforms(z, b, c),
+     criterion(t, correctness), consumes(z, correctness)],
     [expect(is_mechanism(x)), refuse(serves_as_mechanism(x, s)), refuse(cognitive_whole(s))]).
 
 % R10: an evaluator that judges under the criterion and takes the output up
 % but never returns anything does not direct the team, so the team is not
-% even a cognitive system.
+% even a cognitive system, and bob, whose revision only the silent editor
+% takes up, is no mechanism.
 phenomenon(team_judged_without_reply,
     [intelligence_when_organised_and_directed, directed_when_evaluator_returns,
-     whole_when_it_has_a_mechanism],
+     whole_when_it_has_a_mechanism, working_takes_up_through_a_returning_evaluator],
     [belongs(alice, team), belongs(bob, team),
      transforms(alice, draft, critique), consumes(bob, critique),
      transforms(bob, critique, revision), feeds_back(bob, alice),
      criterion(team, publication), judges_under(editor, publication),
      consumes(editor, revision), transforms(editor, revision, notes)],
-    [refuse(cognitive_whole(team)), refuse(carries_out(team, publication))]).
+    [refuse(cognitive_whole(team)), refuse(carries_out(team, publication)),
+     refuse(is_mechanism(bob))]).
 
 % R11: the weather is an uptake chain under no criterion. Nothing directs
 % the sky, so the sun is not a mechanism and the sky is not a cognitive
 % system, however much transforms and is taken up.
 phenomenon(weather_is_not_cognitive,
-    [cognitive_when_taken_up_into_a_directed_working, mechanism_when_it_transforms_cognitively,
-     mechanism_when_its_output_is_taken_up_in_a_directed_system, whole_when_it_has_a_mechanism,
+    [cognitive_when_taken_up_by_the_working_of_its_system, mechanism_when_it_serves_in_some_system,
+     mechanism_when_the_working_takes_up_its_output, whole_when_it_has_a_mechanism,
      transformation_when_components_chain],
     [belongs(sun, sky), belongs(cloud, sky),
      transforms(sun, water, vapour), consumes(cloud, vapour),

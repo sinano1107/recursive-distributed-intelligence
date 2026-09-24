@@ -33,13 +33,17 @@ These terms are not defined by any Claim. They enter as facts a Phenomenon state
 One representation or state turned into another by some component. Not every transformation is cognitive. A system transforms what a chain of its components transforms along uptake, and nothing that one component transforms alone, so a system's transformation is its integration and is derived from its organisation, never stated.
 _Avoid_: computation, processing step
 
+**Uptake by the working** (`taken_up_by_working/2`):
+The working of a directed system takes a state up when a component of the system takes it up and transforms it, or when an evaluator judging under the system's criterion takes it up, transforms it, and its response returns into the system. A taker that only records does not count; neither does a system that nothing directs, nor an evaluator that never replies.
+_Avoid_: consumption, reception
+
 **Cognitive transformation** (`cognitive_transformation/3`):
-A transformation whose output a component of a directed system, or an evaluator judging under a criterion, takes up and transforms in turn: its uptake reaches a working that a criterion directs. Being cognitive is a relation to a taker, not a property of the transformation itself. The transforming side belongs to no system in particular; the taker must be directed, by its system or as an evaluator. It need not reduce information and need not succeed. The taker may be the same component at a later time: the self is divided along time.
+A transformation whose output the working of a directed system that the transformer belongs to takes up. Being cognitive is a role in a system, not a property of the transformation itself and not a relation to a lone taker; whoever describes the phenomenon draws the boundary. It need not reduce information and need not succeed. The taker may be the same component at a later time: the self is divided along time.
 _Avoid_: compression, useful transformation, intrinsic property, context-sensitive
 
-**Cognitive transformation mechanism** (`mechanism/1`; Observation `is_mechanism/1`):
-Whatever performs a cognitive transformation. It needs no system to belong to and is silent about its own intelligence. It serves as a mechanism in a particular system (`mechanism_in/2`; Observation `serves_as_mechanism/2`) when a component of that system takes its output up and transforms it and a criterion directs that system: that is the boundary-relative role. A taker inside the boundary that does nothing with the output does not confer it, and neither does a system that nothing directs. Mechanism-hood extends to whatever a directed system takes up, the environment included, when the boundary is drawn so.
-_Avoid_: agent, processor, node, sub-intelligence
+**Cognitive transformation mechanism** (`mechanism_in/2`; Observation `serves_as_mechanism/2`):
+A component whose output the working of its directed system takes up: the boundary-relative role, and the only sense of the word. `mechanism/1` (Observation `is_mechanism/1`) says only that the component serves as a mechanism in some system. Silent about the mechanism's own intelligence. A taker inside the boundary that does nothing with the output does not confer the role, and neither does a system that nothing directs. Mechanism-hood extends to the environment when the boundary is drawn to include it.
+_Avoid_: agent, processor, node, sub-intelligence, system-less mechanism
 
 **Coupling surface** (`shared_in/2`; Observation `shared_state/2`):
 A state that one component passively holds and another component takes up. Holding is not transforming: a repository is a coupling surface, not a mechanism.

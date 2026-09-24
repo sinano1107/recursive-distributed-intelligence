@@ -1,6 +1,6 @@
 % Cognitive transformation mechanisms. Core vocabulary: component_of/2,
 % transformation/3, takes_up/2, returns_to/2, under_criterion/2, retains/2,
-% cognitive_transformation/3, mechanism/1, mechanism_in/2, cognitive_system/1,
+% taken_up_by_working/2, cognitive_transformation/3, mechanism/1, mechanism_in/2, cognitive_system/1,
 % evaluator_of/2, directed_by/2, realises_intelligence/2, shared_in/2,
 % nested_in/2, recurrent_system/1, recurrent_cognitive_system/1, can_revise/1.
 
@@ -17,43 +17,45 @@ claim(transformation_composes_along_uptake, required,
         transformation(S, In, Mid), component_of(Y, S),
         takes_up(Y, Mid), transformation(Y, Mid, Out))).
 
-% A transformation is cognitive when a component of a directed system takes
-% its output up and transforms it in turn: its uptake reaches a working that
-% a criterion directs (issue #16). Being cognitive is a relation to a taker,
-% not a property of the transformation; a taker that only records is not
-% one, and neither is a taker that nothing directs. The transforming side
-% belongs to no system in particular; the taker does. The taker may be the
-% same component at a later time: the self is divided along time, so X = Y
-% is allowed on purpose (issue #9).
-claim(cognitive_when_taken_up_into_a_directed_working, required,
-    (cognitive_transformation(X, In, Out) :-
-        transformation(X, In, Out), takes_up(Y, Out), transformation(Y, Out, _),
-        component_of(Y, S), directed_by(S, _))).
-
-% An evaluator judging under a criterion is a directed taker in its own
-% right: the criterion has entered its working. So the transformation it
-% takes up and transforms is cognitive without a system drawn round it.
-claim(cognitive_when_taken_up_by_an_evaluator, required,
-    (cognitive_transformation(X, In, Out) :-
-        transformation(X, In, Out), takes_up(E, Out), transformation(E, Out, _),
-        evaluator_of(E, _))).
-
-% A mechanism is whatever performs a cognitive transformation. It needs no
-% system to belong to, and nothing is said about its own intelligence.
-claim(mechanism_when_it_transforms_cognitively, required,
-    (mechanism(X) :- cognitive_transformation(X, _, _))).
-
-% The boundary-relative role: a component serves as a mechanism in a system
-% when another component of that directed system takes its output up and
-% transforms it. The taker must transform here too, so a system with a
-% mechanism in it transforms something as a system (the composition base);
-% the direction is what makes that system cognitive rather than one that
-% merely transforms as a system.
-claim(mechanism_when_its_output_is_taken_up_in_a_directed_system, required,
-    (mechanism_in(X, S) :-
-        component_of(X, S), transformation(X, _, Out),
-        component_of(Y, S), takes_up(Y, Out), transformation(Y, Out, _),
+% The working of a directed system takes a state up in two ways: a
+% component of the system takes it up and transforms it, or an evaluator
+% judging under the system's criterion takes it up, transforms it, and its
+% response returns into the system (issue #16). A taker that only records
+% does not count, and neither does a system that nothing directs or an
+% evaluator that never replies. The taker may be the same component at a
+% later time: the self is divided along time (issue #9).
+claim(working_takes_up_through_a_component, required,
+    (taken_up_by_working(S, R) :-
+        component_of(Y, S), takes_up(Y, R), transformation(Y, R, _),
         directed_by(S, _))).
+claim(working_takes_up_through_a_returning_evaluator, required,
+    (taken_up_by_working(S, R) :-
+        under_criterion(S, T), evaluator_of(E, T), takes_up(E, R), transformation(E, R, _),
+        returns_to(E, Z), component_of(Z, S), directed_by(S, _))).
+
+% A transformation is cognitive when the working of a directed system the
+% transformer belongs to takes its output up: being cognitive is a role in
+% a system, not a property of the transformation and not a relation to a
+% lone taker. Whoever describes the phenomenon draws the boundary.
+claim(cognitive_when_taken_up_by_the_working_of_its_system, required,
+    (cognitive_transformation(X, In, Out) :-
+        transformation(X, In, Out), component_of(X, S), taken_up_by_working(S, Out))).
+
+% The boundary-relative role, and the only one: a component serves as a
+% mechanism in a system when the working of that directed system takes its
+% output up. The taker transforms, so a system with a mechanism in it
+% transforms something as a system (the composition base); the direction is
+% what makes that system cognitive rather than one that merely transforms
+% as a system. Nothing is said about the mechanism's own intelligence.
+claim(mechanism_when_the_working_takes_up_its_output, required,
+    (mechanism_in(X, S) :-
+        component_of(X, S), transformation(X, _, Out), taken_up_by_working(S, Out))).
+
+% A mechanism is whatever serves as a mechanism in some system.
+claim(mechanism_when_it_serves_in_some_system, required,
+    (mechanism(X) :- mechanism_in(X, _))).
+
+
 
 % A system with a mechanism in it is a cognitive system. Since serving as a
 % mechanism needs the system directed, organisation alone does not make
@@ -123,6 +125,7 @@ template(under_criterion(S, T), [S, is, under, the, criterion, T]).
 template(evaluator_of(E, T), [E, judges, under, the, criterion, T]).
 template(directed_by(S, T), [S, is, directed, by, the, criterion, T]).
 template(retains(X, R), [X, passively, holds, R]).
+template(taken_up_by_working(S, R), [the, working, of, S, takes, up, R]).
 template(cognitive_transformation(X, In, Out), [X, performs, a, cognitive, transformation, of, In, into, Out]).
 template(mechanism(X), [X, is, a, cognitive, transformation, mechanism]).
 template(mechanism_in(X, S), [X, serves, as, a, cognitive, transformation, mechanism, in, S]).

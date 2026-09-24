@@ -10,10 +10,11 @@ bridge(evaluator_from_judges_under, (evaluator_of(E, T) :- judges_under(E, T))).
 % Core out to Observations.
 bridge(turns_from_transformation, (turns(S, In, Out) :- transformation(S, In, Out))).
 bridge(carries_out_from_realises_intelligence, (carries_out(S, T) :- realises_intelligence(S, T))).
-bridge(is_mechanism_from_mechanism, (is_mechanism(X) :- mechanism(X))).
+bridge(is_mechanism_from_mechanism_in, (is_mechanism(X) :- mechanism_in(X, _))).
 bridge(serves_as_mechanism_from_mechanism_in, (serves_as_mechanism(X, S) :- mechanism_in(X, S))).
 bridge(whole_from_cognitive_system, (cognitive_whole(S) :- cognitive_system(S))).
 bridge(shared_state_from_shared_in, (shared_state(R, S) :- shared_in(R, S))).
 bridge(nested_from_nested_in, (nested(X, S) :- nested_in(X, S))).
 bridge(recurrent_from_recurrent_system, (recurrent(S) :- recurrent_system(S))).
+bridge(recurrent_whole_from_recurrent_cognitive_system, (recurrent_whole(S) :- recurrent_cognitive_system(S))).
 bridge(revisable_from_can_revise, (revisable(S) :- can_revise(S))).

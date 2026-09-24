@@ -35,7 +35,7 @@ _Avoid_: computation, processing step
 
 **Uptake by the working** (`taken_up_by_working/2`):
 The working of a directed system takes a state up when a component of the system takes it up and transforms it, or when an evaluator judging under the system's criterion takes it up, transforms it, and its response returns into the system. A taker that only records does not count; neither does a system that nothing directs, nor an evaluator that never replies.
-_Avoid_: consumption, reception
+_Avoid_: reception, receipt
 
 **Cognitive transformation** (`cognitive_transformation/3`):
 A transformation whose output the working of a directed system that the transformer belongs to takes up. Being cognitive is a role in a system, not a property of the transformation itself and not a relation to a lone taker; whoever describes the phenomenon draws the boundary. It need not reduce information and need not succeed. The taker may be the same component at a later time: the self is divided along time.
@@ -62,7 +62,7 @@ A criterion directs a system when it enters the working: a component takes the c
 _Avoid_: agency, motivation, alignment
 
 **Intelligence** (`realises_intelligence/2`; Observation `carries_out/2`):
-The working of an organised cognitive system under the criterion that directs it. Not a capacity the system owns and not an attribution. Judged at a boundary: a mechanism in an intelligent system need not realise intelligence at its own boundary, so intelligence does not descend to the components. The Core states only the two conditions; the vault's grading of intelligence is not formalised.
+The working of an organised cognitive system under the criterion that directs it. Not a capacity the system owns and not an attribution. Judged at a boundary: a mechanism in a system that realises intelligence need not realise intelligence at its own boundary, so intelligence does not descend to the components. The Core states only the two conditions; the vault's grading of intelligence is not formalised.
 _Avoid_: capability, capacity, ability, IQ, scalar intelligence
 
 **Recurrence** (`recurrent_system/1`; Observation `recurrent/1`):

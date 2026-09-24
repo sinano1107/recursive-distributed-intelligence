@@ -49,13 +49,11 @@ claim(cognitive_when_taken_up_by_the_working_of_its_system, required,
 % as a system. Nothing is said about the mechanism's own intelligence.
 claim(mechanism_when_the_working_takes_up_its_output, required,
     (mechanism_in(X, S) :-
-        component_of(X, S), transformation(X, _, Out), taken_up_by_working(S, Out))).
+        component_of(X, S), cognitive_transformation(X, _, Out), taken_up_by_working(S, Out))).
 
 % A mechanism is whatever serves as a mechanism in some system.
 claim(mechanism_when_it_serves_in_some_system, required,
     (mechanism(X) :- mechanism_in(X, _))).
-
-
 
 % A system with a mechanism in it is a cognitive system. Since serving as a
 % mechanism needs the system directed, organisation alone does not make
@@ -110,10 +108,9 @@ claim(recurrent_cognitive_when_directed, required,
 % Recurrence supports revision: a mechanism's later transformation acts on
 % the response to its earlier output. Stated for a recurrent cognitive
 % system; for re-entry that nothing directs, revision is not derived.
-% Provisional: the
-% vault hedges it (recurrence can fail or become costly, and is not a
-% proven necessary condition), and the Claim adds little beyond the loop's
-% existence.
+% Provisional: the vault hedges it (recurrence can fail or become costly,
+% and is not a proven necessary condition), and the Claim adds little
+% beyond the re-entry's existence.
 claim(revision_when_recurrent, provisional,
     (can_revise(S) :- recurrent_cognitive_system(S))).
 

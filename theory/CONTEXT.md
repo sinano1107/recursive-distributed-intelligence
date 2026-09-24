@@ -34,7 +34,7 @@ One representation or state turned into another by some component. Not every tra
 _Avoid_: computation, processing step
 
 **Cognitive transformation** (`cognitive_transformation/3`):
-A transformation whose output a component of a directed system takes up and transforms in turn: its uptake reaches a working that a criterion directs. Being cognitive is a relation to a taker, not a property of the transformation itself. The transforming side belongs to no system in particular; the taker does, and that system must be directed. It need not reduce information and need not succeed. The taker may be the same component at a later time: the self is divided along time.
+A transformation whose output a component of a directed system, or an evaluator judging under a criterion, takes up and transforms in turn: its uptake reaches a working that a criterion directs. Being cognitive is a relation to a taker, not a property of the transformation itself. The transforming side belongs to no system in particular; the taker must be directed, by its system or as an evaluator. It need not reduce information and need not succeed. The taker may be the same component at a later time: the self is divided along time.
 _Avoid_: compression, useful transformation, intrinsic property, context-sensitive
 
 **Cognitive transformation mechanism** (`mechanism/1`; Observation `is_mechanism/1`):
@@ -46,8 +46,8 @@ A state that one component passively holds and another component takes up. Holdi
 _Avoid_: memory, channel, interface
 
 **Organised cognitive system** (`cognitive_system/1`; Observation `cognitive_whole/1`):
-A system in which at least one component serves as a cognitive transformation mechanism, which requires some criterion to direct the system. A system that merely transforms as a system (its components' transformations chain along uptake, Observation `turns/3`) is organised but not cognitive. No recurrence is required.
-_Avoid_: collective, group mind, intelligent system, organised system (for the undirected case: say "transforms as a system")
+A system in which at least one component serves as a cognitive transformation mechanism, which requires some criterion to direct the system. A system that merely transforms as a system (its components' transformations chain along uptake, Observation `turns/3`) is not cognitive. No recurrence is required.
+_Avoid_: collective, group mind, intelligent system, organised system (for the undirected case say "transforms as a system")
 
 **Criterion** (`under_criterion/2`; Observation `criterion/2`):
 What a system's transitions are judged effective by. A task, a goal, a value gradient or an evaluator's standard can supply one; the Core does not say where it comes from. Attributed to a system by whoever draws its boundary; attribution alone directs nothing, and a criterion is not an obligation.
@@ -62,7 +62,7 @@ The working of an organised cognitive system under the criterion that directs it
 _Avoid_: capability, capacity, ability, IQ, scalar intelligence
 
 **Recurrence** (`recurrent_system/1`; Observation `recurrent/1`):
-Temporal re-entry: the component that takes up a component's output and transforms it feeds its own output back into that component. Structural: a loop that adds random numbers is recurrent. Distinct from recursive nesting.
+Temporal re-entry: the component that takes up a component's output and transforms it feeds its own output back into that component. Structural: a generator and an adder feeding each other random numbers are recurrent. Distinct from recursive nesting.
 _Avoid_: recursion, loop
 
 **Recurrent cognitive system** (`recurrent_cognitive_system/1`; Observation `recurrent_whole/1`):
@@ -70,7 +70,7 @@ A recurrent system that is an organised cognitive system: the re-entry happens i
 _Avoid_: feedback loop, control loop
 
 **Revision through recurrence** (`can_revise/1`, provisional; Observation `revisable/1`):
-A recurrent cognitive system can revise: a mechanism's later transformation acts on the response to its earlier output, so no state at that mechanism is final. A recurrent system that nothing directs merely re-enters. Whether revision happens, corrects, or is affordable is not asserted.
+A recurrent cognitive system can revise: a mechanism's later transformation acts on the response to its earlier output, so no state at that mechanism is final. For re-entry that nothing directs, revision is not derived. Whether revision happens, corrects, or is affordable is not asserted.
 _Avoid_: self-correction, learning, convergence
 
 **Recursive nesting** (`nested_in/2`; Observation `nested/2`):

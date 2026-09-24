@@ -30,6 +30,14 @@ claim(cognitive_when_taken_up_into_a_directed_working, required,
         transformation(X, In, Out), takes_up(Y, Out), transformation(Y, Out, _),
         component_of(Y, S), directed_by(S, _))).
 
+% An evaluator judging under a criterion is a directed taker in its own
+% right: the criterion has entered its working. So the transformation it
+% takes up and transforms is cognitive without a system drawn round it.
+claim(cognitive_when_taken_up_by_an_evaluator, required,
+    (cognitive_transformation(X, In, Out) :-
+        transformation(X, In, Out), takes_up(E, Out), transformation(E, Out, _),
+        evaluator_of(E, _))).
+
 % A mechanism is whatever performs a cognitive transformation. It needs no
 % system to belong to, and nothing is said about its own intelligence.
 claim(mechanism_when_it_transforms_cognitively, required,
@@ -39,8 +47,8 @@ claim(mechanism_when_it_transforms_cognitively, required,
 % when another component of that directed system takes its output up and
 % transforms it. The taker must transform here too, so a system with a
 % mechanism in it transforms something as a system (the composition base);
-% the direction is what makes that system cognitive rather than merely
-% organised.
+% the direction is what makes that system cognitive rather than one that
+% merely transforms as a system.
 claim(mechanism_when_its_output_is_taken_up_in_a_directed_system, required,
     (mechanism_in(X, S) :-
         component_of(X, S), transformation(X, _, Out),
@@ -83,7 +91,8 @@ claim(nested_when_whole_is_mechanism, required,
 
 % Recurrence (temporal re-entry): the component that takes up a component's
 % output and transforms it feeds its output back into that component.
-% Structural: a loop that adds random numbers is recurrent.
+% Structural: a generator and an adder feeding each other random numbers
+% are recurrent.
 claim(recurrent_when_output_returns, required,
     (recurrent_system(S) :-
         component_of(X, S), transformation(X, _, Out),
@@ -97,8 +106,9 @@ claim(recurrent_cognitive_when_directed, required,
     (recurrent_cognitive_system(S) :- recurrent_system(S), cognitive_system(S))).
 
 % Recurrence supports revision: a mechanism's later transformation acts on
-% the response to its earlier output. Only a recurrent cognitive system can
-% revise; a loop that nothing directs merely re-enters. Provisional: the
+% the response to its earlier output. Stated for a recurrent cognitive
+% system; for re-entry that nothing directs, revision is not derived.
+% Provisional: the
 % vault hedges it (recurrence can fail or become costly, and is not a
 % proven necessary condition), and the Claim adds little beyond the loop's
 % existence.

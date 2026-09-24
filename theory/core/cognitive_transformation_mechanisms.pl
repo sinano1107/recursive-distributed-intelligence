@@ -1,6 +1,6 @@
 % Cognitive transformation mechanisms. Core vocabulary: component_of/2,
 % transformation/3, takes_up/2, returns_to/2, under_criterion/2, retains/2,
-% taken_up_by_working/2, cognitive_transformation/3, mechanism/1, mechanism_in/2, cognitive_system/1,
+% taken_up_by_working/2, cognitive_transformation/3, mechanism_in/2, cognitive_system/1,
 % evaluator_of/2, directed_by/2, realises_intelligence/2, shared_in/2,
 % nested_in/2, recurrent_system/1, recurrent_cognitive_system/1, can_revise/1.
 
@@ -43,17 +43,10 @@ claim(cognitive_when_taken_up_by_the_working_of_its_system, required,
 
 % The boundary-relative role, and the only one: a component serves as a
 % mechanism in a system when the working of that directed system takes its
-% output up. The taker transforms, so a system with a mechanism in it
-% transforms something as a system (the composition base); the direction is
-% what makes that system cognitive rather than one that merely transforms
-% as a system. Nothing is said about the mechanism's own intelligence.
+% output up. Nothing is said about the mechanism's own intelligence.
 claim(mechanism_when_the_working_takes_up_its_output, required,
     (mechanism_in(X, S) :-
         component_of(X, S), cognitive_transformation(X, _, Out), taken_up_by_working(S, Out))).
-
-% A mechanism is whatever serves as a mechanism in some system.
-claim(mechanism_when_it_serves_in_some_system, required,
-    (mechanism(X) :- mechanism_in(X, _))).
 
 % A system with a mechanism in it is a cognitive system. Since serving as a
 % mechanism needs the system directed, organisation alone does not make
@@ -124,7 +117,6 @@ template(directed_by(S, T), [S, is, directed, by, the, criterion, T]).
 template(retains(X, R), [X, passively, holds, R]).
 template(taken_up_by_working(S, R), [the, working, of, S, takes, up, R]).
 template(cognitive_transformation(X, In, Out), [X, performs, a, cognitive, transformation, of, In, into, Out]).
-template(mechanism(X), [X, is, a, cognitive, transformation, mechanism]).
 template(mechanism_in(X, S), [X, serves, as, a, cognitive, transformation, mechanism, in, S]).
 template(cognitive_system(S), [S, is, an, organised, cognitive, system]).
 template(realises_intelligence(S, T), [S, realises, intelligence, under, the, criterion, T]).

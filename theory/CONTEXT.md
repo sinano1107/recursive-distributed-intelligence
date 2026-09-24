@@ -23,9 +23,9 @@ These terms are not defined by any Claim. They enter as facts a Phenomenon state
 - **Component** (`component_of/2`; Observation `belongs/2`): X lies inside the boundary drawn around S. Boundaries are analytical: whoever describes a Phenomenon draws them, and the same entity can lie inside several.
 - **Transformation** (`transformation/3`; Observation `transforms/3`): defined below only as far as composition; that a component transforms is a primitive.
 - **Uptake** (`takes_up/2`; Observation `consumes/2`): Y takes R as input.
-- **Return** (`returns_to/2`; Observation `feeds_back/2`): Y's output goes back into X.
+- **Return** (`returns_to/2`; Observation `feeds_back/2`): Y's output goes back into X. A return says only that; what X then does is a further fact. X may transform the response (`transformation/3`: a dismissal is a transformation result, so ignoring a response is not the absence of uptake), hold it untransformed and available (`retains/2`), or the phenomenon may say neither. Direction and serving as a mechanism require none of these; whether the system revises is not asserted.
 - **Criterion** (`under_criterion/2`; Observation `criterion/2`) and **Evaluator** (`evaluator_of/2`; Observation `judges_under/2`): a criterion attributed to S, and who judges under it.
-- **Holding** (`retains/2`; Observation `stores/2`): X keeps R available without transforming it. "Passively" glosses the absence of a transformation by X.
+- **Holding** (`retains/2`; Observation `stores/2`): X keeps R available without transforming it. "Passively" glosses the absence of a transformation by X. Held is untransformed and available, not on the way to a transformation: a held state may be taken up later or never.
 
 ### Cognitive transformation mechanisms
 

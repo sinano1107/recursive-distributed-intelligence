@@ -1,0 +1,5 @@
+interface:
+  display_name: "Theory slice (RDI)"
+  short_description: "Formalise one theory issue with the user, in this thread"
+policy:
+  allow_implicit_invocation: false

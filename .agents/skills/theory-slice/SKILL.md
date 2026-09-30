@@ -40,12 +40,13 @@ Each round is one proposal, checked, then judged by the user.
 1. **Write** in Observation vocabulary first: the phenomenon files (ADR 0002). A phenomenon without Bridge and Core is a load error, and that is the red (issue #7).
 2. **Add** Core statements and shared Bridge rules under `theory/bridge/` until `check/2` returns the expected Verdicts. Each Bridge rule joins one Observation functor to one Core functor. The vault note is the source of expected verdicts and stays out of the Core: a Claim restates the note's meaning in Horn form, never its sentences.
 3. **Check**: full suite (`swipl -g run_tests -t halt framework/test/*.pl theory/test/*.pl`) green; `check('theory', V)` all `explains` / `refuses`, with `pending` only on a `provisional` Claim; every `required` Claim on at least one derivation (`derivation/4` over the phenomena; until #21 lands the framework is silent about a dead Claim); `DependsOn` lists the Claims the phenomenon is written to test.
-4. **Show** the user, per new or changed Claim: the rendering taken from `render/2` (never typed by hand), a Japanese translation of it, and for each phenomenon that needs a judgement, the facts and boundary in plain language in the glossary's words (`/wait-what` style). The user accepts the Claim, sets it `provisional`, or sends it back with the reason.
-5. **Record**: accepted decisions to the issue; a decision that overturns an ADR to a new ADR under `theory/docs/adr/`; each term to `theory/CONTEXT.md` with its Core and Observation names and its _Avoid_ words. Commit the round.
+4. **Regenerate** `theory/rendering.md` (`swipl framework/tools/render_claims.pl theory > theory/rendering.md`); CI fails when it is stale, and its diff is the rendering of record for the PR.
+5. **Show** the user, per new or changed Claim: its line from `theory/rendering.md`, a Japanese translation of it, and for each phenomenon that needs a judgement, the facts and boundary in plain language in the glossary's words (`/wait-what` style). The user accepts the Claim, sets it `provisional`, or sends it back with the reason.
+6. **Record**: accepted decisions to the issue; a decision that overturns an ADR to a new ADR under `theory/docs/adr/`; each term to `theory/CONTEXT.md` with its Core and Observation names and its _Avoid_ words. Commit the round.
 
 A claim that does not survive formalisation is set `provisional` and filed (ADR 0001); the finding is part of what the theory learns about itself.
 
-**The gate is closed** when every Claim on the branch has been accepted by the user, the user has compared the rendering with the vault prose (a judgement, not an assertion), and the checks in step 3 pass. Reviews start only then (issue #14): a review of a half-gated Core is stale by the time the gate closes.
+**The gate is closed** when every Claim on the branch has been accepted by the user, the user has compared `theory/rendering.md` with the vault prose (a judgement, not an assertion), and the checks in step 3 pass. Reviews start only then (issue #14): a review of a half-gated Core is stale by the time the gate closes.
 
 ## Review
 
@@ -74,7 +75,7 @@ Gather everything the run surfaced: the reviewers' "did not cause" notes, findin
 
 ## The pull request
 
-Push the branch and open a PR: a Japanese body with `## Summary`, `## 進め方` (this thread formalised with the user; which sub-agents reviewed, at which model), a `## Test plan` checklist, `## 決定` (the gate decisions, or a pointer to the issue and the PR comments that hold them), `## レビュー指摘の対応` (every finding from all three passes, with the commit that addresses it or the checkable reason it was declined; a filed one says `→ #n に起票`), `## 発見した問題`, and `Closes #<issue>`. After the last commit, `grep` every Claim name the body cites against `theory/core/`; a name the gate renamed is the usual miss.
+Push the branch and open a PR: a Japanese body with `## Summary`, `## 進め方` (this thread formalised with the user; which sub-agents reviewed, at which model), a `## Test plan` checklist, `## 決定` (the gate decisions, or a pointer to the issue and the PR comments that hold them), `## レビュー指摘の対応` (every finding from all three passes, with the commit that addresses it or the checkable reason it was declined; a filed one says `→ #n に起票`), `## 発見した問題`, and `Closes #<issue>`. The rendering is the diff of `theory/rendering.md`, so the body carries no table of it. After the last commit, `grep` every Claim name the body cites against `theory/core/`; a name the gate renamed is the usual miss.
 
 ## Where this stops
 

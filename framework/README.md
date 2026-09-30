@@ -38,6 +38,11 @@ Load `framework/prolog/framework.pl`. It exports exactly `check/2`,
 `load_theory(Dir)` is exported too; `render/2` and `parse/2` use the
 Templates of the theory loaded last (`check/2` and `cites_core/1` load).
 
+`framework/tools/render_claims.pl <TheoryDir>` prints every Claim's
+rendering as a Markdown table, in Core order, with its Status. A theory
+commits the output as `<theory>/rendering.md` and its CI regenerates and
+diffs it, so the rendering a reviewer reads is always the Core's own.
+
 ## Theory directory layout
 
 ```

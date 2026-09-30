@@ -10,9 +10,9 @@ The five canonical triage roles use their default label names (`needs-triage`, `
 
 ### Implementation
 
-For a `ready-for-agent` issue use `/implement-rdi <issue>` (not `/implement`). `/implementation-delegation <issue>` picks the model, effort, and review strength first. Test seams are fixed by `docs/adr/0004`.
+Two kinds of work. A change under `theory/` is formalised with the user in the thread: `/theory-slice <issue>`; sub-agents only review. A framework issue on `ready-for-agent` is built by `/implement-rdi <issue>` (not `/implement`), with `/implementation-delegation <issue>` picking the model, effort, and review strength first. Test seams are fixed by `docs/adr/0004`.
 
-How the skills chain in this repo, session boundaries, language, and the theory-slice loop: `docs/agents/workflow.md`. Per-machine prerequisites: `docs/agents/machine-setup.md`.
+How the skills chain in this repo, why theory work is dialogic, session boundaries, and language: `docs/agents/workflow.md`. Per-machine prerequisites: `docs/agents/machine-setup.md`.
 
 ### Domain docs
 

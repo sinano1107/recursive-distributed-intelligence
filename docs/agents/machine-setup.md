@@ -12,7 +12,7 @@ Everything the workflow calls is vendored under `.agents/skills/`, so a clone ha
 
 ## Design and build sessions
 
-The workflow runs ponytail off while deciding and `full` while building (see [workflow.md](./workflow.md)). Which one a session gets is decided at launch by `PONYTAIL_DEFAULT_MODE`; the plugin's `SessionStart` hook re-reads it on every `startup`, `resume`, `clear`, and `compact`.
+The workflow runs ponytail off while deciding, and off throughout a theory session, and `full` while building the framework (see [workflow.md](./workflow.md)). Which one a session gets is decided at launch by `PONYTAIL_DEFAULT_MODE`; the plugin's `SessionStart` hook re-reads it on every `startup`, `resume`, `clear`, and `compact`.
 
 Ponytail's own default is `full`, so without the lines below a grilling session runs with ponytail on and argues you out of options before you have weighed them.
 
@@ -26,4 +26,4 @@ codex-design()  { PONYTAIL_DEFAULT_MODE=off  command codex  "$@"; }
 codex-build()   { PONYTAIL_DEFAULT_MODE=full command codex  "$@"; }
 ```
 
-Grill and spec in a design session; implement in a build one.
+Theory sessions (`/theory-slice`) are design sessions from the first round to the PR. Framework work grills and specs in a design session and implements in a build one.

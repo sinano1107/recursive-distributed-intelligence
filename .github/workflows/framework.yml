@@ -17,3 +17,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y swi-prolog-nox
       - run: swipl -g run_tests -t halt framework/test/*.pl theory/test/*.pl
+      - name: theory/rendering.md matches the Core
+        run: |
+          swipl framework/tools/render_claims.pl theory > theory/rendering.md
+          git diff --exit-code -- theory/rendering.md
